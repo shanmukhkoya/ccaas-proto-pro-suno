@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Interactive CTI Protocol Simulator - Learn SIP, WebRTC, MGCP, CSTA, TAPI, SIPREC and AI-driven CCaaS protocols with voice narration and animated call flows">
+  <meta property="og:title" content="CTI Protocol Simulator - AI-Driven CCaaS Edition">
+  <title>CTI Protocol Simulator — AI CCaaS Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Modern Dark Theme Palette */
+      --bg: #09090b;
+      /* Zinc 950 */
+      --surface: #121215;
+      /* Zinc 900+ */
+      --surface2: #1e1e22;
+      /* Zinc 800+ */
+      --border: #27272a;
+      /* Zinc 800 */
+
+      /* Vibrant Accents */
+      --accent: #0ea5e9;
+      /* Sky 500 */
+      --accent-glow: rgba(14, 165, 233, 0.15);
+
+      --accent2: #8b5cf6;
+      /* Violet 500 */
+      --accent2-glow: rgba(139, 92, 246, 0.15);
+
+      --accent3: #10b981;
+      /* Emerald 500 */
+      --accent3-glow: rgba(16, 185, 129, 0.15);
+
+      --accent4: #f59e0b;
+      /* Amber 500 */
+      --accent5: #ef4444;
+      /* Red 500 */
+
+      /* Text */
+      --text: #e4e4e7;
+      /* Zinc 200 */
+      --text-dim: #a1a1aa;
+      /* Zinc 400 */
+      --text-bright: #ffffff;
+
+      /* Fonts */
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Outfit', sans-serif;
+      /* Headings / UI */
+      --body-font: 'Inter', sans-serif;
+      /* Body text */
+
+      /* Effects */
+      --glass: rgba(18, 18, 21, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--body-font);
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    /* HEADER */
+    /* HEADER */
+    .header {
+      background: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 50;
+    }
+
+    .header::before {
+      content: none
+    }
+
+    /* Remove old gradient line */
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .title-block h1 {
+      font-family: var(--sans);
+      font-size: 1.5em;
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: -0.02em
+    }
+
+    .title-block p {
+      font-size: 0.85em;
+      color: var(--text-dim);
+      font-weight: 400
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.75em;
+      font-weight: 600;
+      font-family: var(--sans);
+      letter-spacing: 0.02em
+    }
+
+    .badge-ai {
+      background: var(--accent2-glow);
+      color: var(--accent2);
+      border: 1px solid rgba(139, 92, 246, 0.3)
+    }
+
+    .badge-live {
+      background: var(--accent3-glow);
+      color: var(--accent3);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent3);
+      box-shadow: 0 0 8px var(--accent3);
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.6;
+        transform: scale(1.1)
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    /* LAYOUT */
+    .app {
+      display: flex;
+      flex: 1;
+      overflow: hidden
+    }
+
+    /* SIDEBAR */
+    /* SIDEBAR */
+    .sidebar {
+      width: 280px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sidebar-header h3 {
+      font-size: 0.75em;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-family: var(--sans)
+    }
+
+    .protocol-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px
+    }
+
+    .proto-btn {
+      padding: 12px 16px;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--sans);
+      color: var(--text-dim);
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .proto-btn:hover {
+      background: var(--surface2);
+      color: var(--text-bright)
+    }
+
+    .proto-btn.active {
+      background: var(--surface2);
+      border-color: var(--border);
+      color: var(--text-bright);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .proto-btn.active .proto-icon {
+      transform: scale(1.1)
+    }
+
+    .proto-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .proto-tag {
+      margin-left: auto;
+      font-size: 0.7em;
+      font-family: var(--mono);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      opacity: 0.8
+    }
+
+    .tag-core {
+      background: var(--accent-glow);
+      color: var(--accent)
+    }
+
+    .tag-ai {
+      background: var(--accent2-glow);
+      color: var(--accent2)
+    }
+
+    .tag-legacy {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent4)
+    }
+
+    .tag-new {
+      background: var(--accent3-glow);
+      color: var(--accent3)
+    }
+
+    .scenarios-section {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      flex: 1;
+      overflow-y: auto
+    }
+
+    .scenarios-section h3 {
+      font-size: 0.75em;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-family: var(--sans);
+      margin-bottom: 12px;
+      padding: 0 4px
+    }
+
+    .scenario-btn {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--sans);
+      color: var(--text-dim);
+      font-size: 0.9em;
+      transition: all 0.15s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scenario-btn:hover {
+      background: var(--surface2);
+      color: var(--text-bright)
+    }
+
+    .scenario-btn.active {
+      background: var(--surface2);
+      color: var(--accent);
+      border-color: var(--border);
+      font-weight: 500
+    }
+
+    .scenario-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      width: 18px;
+      text-align: center
+    }
+
+    /* CANVAS */
+    .canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    /* CANVAS */
+    .canvas-toolbar {
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(18, 18, 21, 0.5);
+      /* Semi-transparent */
+      backdrop-filter: blur(8px);
+    }
+
+    .toolbar-label {
+      font-size: 0.85em;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      min-width: 200px;
+      font-weight: 500
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 0.85em;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--border);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow)
+    }
+
+    .btn:active {
+      transform: translateY(0)
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 1px 2px rgba(14, 165, 233, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #fff;
+      box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.4)
+    }
+
+    .btn-danger {
+      color: var(--accent5);
+      border-color: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.05)
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.4)
+    }
+
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto
+    }
+
+    .speed-control label {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      font-family: var(--mono)
+    }
+
+    .speed-control input {
+      width: 80px;
+      accent-color: var(--accent)
+    }
+
+    .canvas-main {
+      display: flex;
+      flex: 1;
+      overflow: hidden
+    }
+
+    /* DIAGRAM */
+    .diagram-area {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      position: relative;
+      background: var(--bg)
+    }
+
+
+
+    /* Protocol Info Banner */
+    .proto-info-banner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden
+    }
+
+    .proto-info-banner::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      border-radius: 3px
+    }
+
+    .pib-sip::before {
+      background: var(--accent)
+    }
+
+    .pib-webrtc::before {
+      background: var(--accent3)
+    }
+
+    .pib-mgcp::before {
+      background: var(--accent4)
+    }
+
+    .pib-siprec::before {
+      background: #f43f5e
+    }
+
+    .pib-csta::before {
+      background: var(--accent2)
+    }
+
+    .pib-tapi::before {
+      background: #0ea5e9
+    }
+
+    .pib-stir::before {
+      background: #8b5cf6
+    }
+
+    .pib-ai::before {
+      background: linear-gradient(180deg, var(--accent2), var(--accent3))
+    }
+
+    .proto-info-banner h2 {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 4px
+    }
+
+    .proto-info-banner p {
+      font-size: 0.78em;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 8px
+    }
+
+    .proto-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .proto-pill {
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.68em;
+      font-family: var(--mono);
+      font-weight: 600;
+      background: var(--surface2);
+      color: var(--text-dim);
+      border: 1px solid var(--border)
+    }
+
+    /* SEQUENCE DIAGRAM */
+    .seq-diagram {
+      position: relative;
+      min-height: 500px
+    }
+
+    .participants-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 2
+    }
+
+    /* SEQUENCE DIAGRAM */
+    .participant-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: center;
+      min-width: 140px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .participant-box.highlight {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow), var(--shadow)
+    }
+
+    .participant-name {
+      font-size: 0.85em;
+      font-weight: 600;
+      color: var(--text-bright);
+      font-family: var(--sans)
+    }
+
+    .participant-role {
+      font-size: 0.7em;
+      color: var(--text-dim);
+      font-family: var(--sans);
+      margin-top: 2px;
+      font-weight: 400
+    }
+
+    .lifelines-area {
+      position: relative
+    }
+
+    .lifeline {
+      position: absolute;
+      width: 1px;
+      border-left: 1px dashed #1e2d5088;
+      top: 0;
+      bottom: 0
+    }
+
+    .msg-row {
+      display: flex;
+      align-items: center;
+      height: 52px;
+      position: relative;
+      margin-bottom: 2px
+    }
+
+    .msg-line {
+      height: 1px;
+      background: var(--accent);
+      position: absolute;
+      transition: width 0.4s ease;
+      transform-origin: left center
+    }
+
+    .msg-line.reverse {
+      transform-origin: right center
+    }
+
+    .msg-arrow-head {
+      position: absolute;
+      width: 0;
+      height: 0;
+      transition: opacity 0.3s 0.3s
+    }
+
+    .msg-arrow-head.right {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--accent)
+    }
+
+    .msg-arrow-head.left {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 8px solid var(--accent)
+    }
+
+    .msg-label {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 0.72em;
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 5
+    }
+
+    .msg-label:hover {
+      background: var(--accent);
+      color: #0a0e1a;
+      transform: translateY(-1px)
+    }
+
+    .msg-timestamp {
+      position: absolute;
+      right: 4px;
+      font-size: 0.6em;
+      color: var(--text-dim);
+      font-family: var(--mono)
+    }
+
+    /* Different arrow colors per protocol */
+    .msg-sip .msg-line,
+    .msg-sip .msg-arrow-head.right,
+    .msg-sip .msg-arrow-head.left {
+      background: var(--accent);
+      border-color: var(--accent)
+    }
+
+    .msg-webrtc .msg-line {
+      background: var(--accent3)
+    }
+
+    .msg-webrtc .msg-arrow-head.right {
+      border-left-color: var(--accent3)
+    }
+
+    .msg-webrtc .msg-arrow-head.left {
+      border-right-color: var(--accent3)
+    }
+
+    .msg-webrtc .msg-label {
+      border-color: var(--accent3);
+      color: var(--accent3)
+    }
+
+    .msg-webrtc .msg-label:hover {
+      background: var(--accent3)
+    }
+
+    .msg-mgcp .msg-line {
+      background: var(--accent4)
+    }
+
+    .msg-mgcp .msg-arrow-head.right {
+      border-left-color: var(--accent4)
+    }
+
+    .msg-mgcp .msg-arrow-head.left {
+      border-right-color: var(--accent4)
+    }
+
+    .msg-mgcp .msg-label {
+      border-color: var(--accent4);
+      color: var(--accent4)
+    }
+
+    .msg-mgcp .msg-label:hover {
+      background: var(--accent4);
+      color: #0a0e1a
+    }
+
+    .msg-siprec .msg-line {
+      background: #f43f5e
+    }
+
+    .msg-siprec .msg-arrow-head.right {
+      border-left-color: #f43f5e
+    }
+
+    .msg-siprec .msg-arrow-head.left {
+      border-right-color: #f43f5e
+    }
+
+    .msg-siprec .msg-label {
+      border-color: #f43f5e;
+      color: #f43f5e
+    }
+
+    .msg-siprec .msg-label:hover {
+      background: #f43f5e
+    }
+
+    .msg-csta .msg-line {
+      background: var(--accent2)
+    }
+
+    .msg-csta .msg-arrow-head.right {
+      border-left-color: var(--accent2)
+    }
+
+    .msg-csta .msg-arrow-head.left {
+      border-right-color: var(--accent2)
+    }
+
+    .msg-csta .msg-label {
+      border-color: var(--accent2);
+      color: #a78bfa
+    }
+
+    .msg-csta .msg-label:hover {
+      background: var(--accent2)
+    }
+
+    .msg-ai .msg-line {
+      background: linear-gradient(90deg, var(--accent2), var(--accent3));
+      height: 2px
+    }
+
+    .msg-ai .msg-arrow-head.right {
+      border-left-color: var(--accent3)
+    }
+
+    .msg-ai .msg-arrow-head.left {
+      border-right-color: var(--accent2)
+    }
+
+    .msg-ai .msg-label {
+      border-color: var(--accent2);
+      color: #a78bfa;
+      background: linear-gradient(135deg, #7c3aed11, #10b98111)
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      width: 360px;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      /* Darker surface for contrast */
+      flex-shrink: 0
+    }
+
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: rgba(18, 18, 21, 0.3);
+    }
+
+    .panel-tab {
+      flex: 1;
+      padding: 14px 10px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 0.75em;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    .panel-tab:hover {
+      color: var(--text);
+      background: var(--surface2);
+    }
+
+    .panel-tab.active {
+      color: var(--text-bright);
+      border-bottom-color: var(--accent);
+      background: var(--surface2);
+    }
+
+    .panel-content {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .panel-section {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    .panel-section.visible {
+      display: flex
+    }
+
+    /* EVENT LOG */
+    .event-log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 0.75em;
+      background: var(--bg)
+    }
+
+
+
+    .event-entry {
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      border-left: 2px solid var(--border);
+      border-radius: 0 4px 4px 0;
+      animation: slideIn 0.2s ease;
+      background: #ffffff04
+    }
+
+    .event-entry.type-send {
+      border-left-color: var(--accent)
+    }
+
+    .event-entry.type-recv {
+      border-left-color: var(--accent3)
+    }
+
+    .event-entry.type-info {
+      border-left-color: var(--accent4)
+    }
+
+    .event-entry.type-success {
+      border-left-color: #10b981
+    }
+
+    .event-entry.type-error {
+      border-left-color: var(--accent5)
+    }
+
+    .event-entry.type-ai {
+      border-left-color: var(--accent2)
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    .ev-time {
+      color: #475569;
+      margin-right: 6px
+    }
+
+    .ev-msg {
+      color: var(--text)
+    }
+
+    /* PROTOCOL DETAIL */
+    .proto-detail-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px
+    }
+
+
+
+    .detail-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-dim);
+      font-size: 0.82em;
+      text-align: center;
+      gap: 8px
+    }
+
+    .detail-placeholder .icon {
+      font-size: 2em;
+      opacity: 0.3
+    }
+
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 0.72em;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      color: #94a3b8;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px)
+    }
+
+    .code-title {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .code-title span {
+      padding: 2px 8px;
+      background: var(--surface2);
+      border-radius: 4px;
+      color: var(--accent)
+    }
+
+    /* VOICE PANEL */
+    .voice-panel {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto
+    }
+
+    .voice-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .voice-toggle-label {
+      font-size: 0.82em;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+      border: none
+    }
+
+    .toggle.on {
+      background: var(--accent3)
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: left 0.3s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3)
+    }
+
+    .toggle.on::after {
+      left: 23px
+    }
+
+    .voice-setting {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .voice-setting label {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .voice-setting select,
+    .voice-setting input[type="range"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-bright);
+      padding: 8px 10px;
+      font-size: 0.8em;
+      font-family: var(--mono);
+      transition: border-color 0.2s;
+    }
+
+    .voice-setting select:focus {
+      outline: 1px solid var(--accent)
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .range-row input {
+      flex: 1;
+      accent-color: var(--accent)
+    }
+
+    .range-val {
+      font-family: var(--mono);
+      font-size: 0.72em;
+      color: var(--accent);
+      min-width: 30px;
+      text-align: right
+    }
+
+    .speaking-pill {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #00d4ff11;
+      border: 1px solid #00d4ff33;
+      border-radius: 8px
+    }
+
+    .speaking-pill.on {
+      display: flex
+    }
+
+    .speaking-pill span {
+      font-size: 0.75em;
+      color: var(--accent);
+      font-family: var(--mono)
+    }
+
+    .bars {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 16px
+    }
+
+    .bars div {
+      width: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+      animation: bar 0.8s ease-in-out infinite
+    }
+
+    .bars div:nth-child(1) {
+      height: 6px;
+      animation-delay: 0s
+    }
+
+    .bars div:nth-child(2) {
+      height: 12px;
+      animation-delay: 0.15s
+    }
+
+    .bars div:nth-child(3) {
+      height: 16px;
+      animation-delay: 0.3s
+    }
+
+    .bars div:nth-child(4) {
+      height: 10px;
+      animation-delay: 0.45s
+    }
+
+    .bars div:nth-child(5) {
+      height: 6px;
+      animation-delay: 0.6s
+    }
+
+    @keyframes bar {
+
+      0%,
+      100% {
+        transform: scaleY(0.5)
+      }
+
+      50% {
+        transform: scaleY(1)
+      }
+    }
+
+    /* NARRATION BOX */
+    .narration-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.78em;
+      line-height: 1.6;
+      color: var(--text-dim);
+      min-height: 80px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .narration-box.speaking {
+      border-color: #00d4ff44;
+      color: var(--text)
+    }
+
+    .narration-title {
+      font-size: 0.68em;
+      font-family: var(--mono);
+      color: var(--text-dim);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    /* SCROLLBAR - GLOBAL */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-dim);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">📡</div>
+      <div class="title-block">
+        <h1>CTI Protocol Simulator</h1>
+        <p>AI-Driven CCaaS Edition</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="badge badge-ai">AI-POWERED</div>
+      <div class="badge badge-live">
+        <div class="live-dot"></div>INTERACTIVE
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Protocol Library</h3>
+      </div>
+      <div class="protocol-grid" id="protocol-list"></div>
+      <div class="scenarios-section">
+        <h3>Scenarios</h3>
+        <div id="scenario-list"></div>
+      </div>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="canvas">
+      <div class="canvas-toolbar">
+        <span class="toolbar-label" id="toolbar-label">Select a protocol and scenario →</span>
+        <button class="btn btn-primary" id="btn-run">▶ Run</button>
+        <button class="btn" id="btn-reset">↺ Reset</button>
+        <button class="btn btn-danger" id="btn-clear">✕ Clear</button>
+        <div class="speed-control">
+          <label>Speed</label>
+          <input type="range" id="speed-slider" min="0.5" max="3" step="0.25" value="1">
+          <span id="speed-val"
+            style="font-size:0.72em;color:var(--accent);font-family:var(--mono);min-width:30px">1x</span>
+        </div>
+      </div>
+      <div class="canvas-main">
+        <div class="diagram-area" id="diagram-area">
+          <div id="proto-info-banner"></div>
+          <div id="seq-diagram" class="seq-diagram"></div>
+        </div>
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+          <div class="panel-tabs">
+            <button class="panel-tab active" data-tab="log">Event Log</button>
+            <button class="panel-tab" data-tab="detail">Message</button>
+            <button class="panel-tab" data-tab="voice">Voice</button>
+          </div>
+          <div class="panel-content">
+            <div class="panel-section visible" id="tab-log">
+              <div class="event-log" id="event-log"></div>
+            </div>
+            <div class="panel-section" id="tab-detail">
+              <div class="proto-detail-panel" id="proto-detail">
+                <div class="detail-placeholder">
+                  <div class="icon">👆</div>
+                  <div>Click any message in the diagram to view its full protocol payload</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-section" id="tab-voice">
+              <div class="voice-panel">
+                <div class="voice-toggle-row">
+                  <span class="voice-toggle-label">🔊 Voice Narration</span>
+                  <button class="toggle" id="voice-toggle"></button>
+                </div>
+                <div class="voice-setting">
+                  <label>Voice</label>
+                  <select id="voice-select"></select>
+                </div>
+                <div class="voice-setting">
+                  <label>Speed</label>
+                  <div class="range-row">
+                    <input type="range" id="voice-rate" min="0.5" max="2" step="0.1" value="0.95">
+                    <span class="range-val" id="rate-display">0.95x</span>
+                  </div>
+                </div>
+                <div class="voice-setting">
+                  <label>Pitch</label>
+                  <div class="range-row">
+                    <input type="range" id="voice-pitch" min="0.5" max="1.5" step="0.1" value="1">
+                    <span class="range-val" id="pitch-display">1.0x</span>
+                  </div>
+                </div>
+                <div class="speaking-pill" id="speaking-pill">
+                  <div class="bars">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <span>Speaking...</span>
+                </div>
+                <div>
+                  <div class="narration-title">Current Narration</div>
+                  <div class="narration-box" id="narration-box">Voice narration will appear here during simulation.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // DATA: Protocols & Scenarios
+    // ============================================================
+    const PROTOCOLS = {
+      sip: {
+        label: 'SIP', icon: '📞', tag: 'CORE', tagClass: 'tag-core',
+        bannerClass: 'pib-sip',
+        name: 'SIP — Session Initiation Protocol',
+        desc: 'RFC 3261. The foundational VoIP signaling protocol used in virtually every modern CCaaS platform. Text-based, HTTP-like request/response model for establishing, modifying and terminating multimedia sessions.',
+        pills: ['RFC 3261', 'UDP/TCP 5060', 'TLS 5061', 'INVITE/BYE', 'SDP Offer/Answer'],
+        color: '#00d4ff',
+        scenarios: ['basic-call', 'inbound', 'outbound', 'transfer', 'hold', 'conference', 'hangup']
+      },
+      webrtc: {
+        label: 'WebRTC', icon: '🌐', tag: 'CORE', tagClass: 'tag-core',
+        bannerClass: 'pib-webrtc',
+        name: 'WebRTC — Web Real-Time Communications',
+        desc: 'W3C/IETF standard enabling browser-to-browser voice, video and data without plugins. The backbone of modern cloud contact center agent desktops (Genesys Cloud, Amazon Connect, Five9).',
+        pills: ['W3C Standard', 'ICE/STUN/TURN', 'DTLS-SRTP', 'RTCPeerConnection', 'Data Channels'],
+        color: '#10b981',
+        scenarios: ['peer-connect', 'inbound', 'outbound', 'transfer', 'hold', 'screen-share', 'hangup']
+      },
+      siprec: {
+        label: 'SIPREC', icon: '🔴', tag: 'AI', tagClass: 'tag-ai',
+        bannerClass: 'pib-siprec',
+        name: 'SIPREC — SIP Recording Protocol',
+        desc: 'RFC 7866. Forks real-time RTP audio streams to AI engines for live transcription, sentiment analysis, agent assist and compliance recording. Critical for AI-driven contact centers using NICE, Verint, or cloud STT.',
+        pills: ['RFC 7866', 'RTP Forking', 'Real-time AI', 'SRS/SRC', 'Compliance'],
+        color: '#f43f5e',
+        scenarios: ['start-recording', 'ai-transcription', 'sentiment', 'agent-assist', 'stop-recording']
+      },
+      mgcp: {
+        label: 'MGCP', icon: '🔀', tag: 'LEGACY', tagClass: 'tag-legacy',
+        bannerClass: 'pib-mgcp',
+        name: 'MGCP — Media Gateway Control Protocol',
+        desc: 'RFC 3435. Master/slave protocol for controlling media gateways in legacy PSTN-to-VoIP interconnects. Still found in carrier-grade contact centers and large enterprise PBXs bridging TDM to IP.',
+        pills: ['RFC 3435', 'UDP 2427', 'CRCX/DLCX', 'Gateway Control', 'PSTN Bridge'],
+        color: '#f59e0b',
+        scenarios: ['basic-call', 'inbound', 'pstn-bridge', 'release', 'restart']
+      },
+      csta: {
+        label: 'CSTA', icon: '🏢', tag: 'CORE', tagClass: 'tag-core',
+        bannerClass: 'pib-csta',
+        name: 'CSTA — Computer Supported Telecoms Apps',
+        desc: 'ECMA-323 XML standard for third-party call control. Vendor-neutral middleware used by Avaya, Cisco JTAPI, Genesys for CTI screen-pops, call routing logic and workforce management integration.',
+        pills: ['ECMA-323', 'XML/SOAP', '3rd Party Control', 'Avaya AES', 'Cisco JTAPI'],
+        color: '#7c3aed',
+        scenarios: ['basic-call', 'inbound', 'outbound', 'transfer', 'hold', 'conference', 'hangup']
+      },
+      tapi: {
+        label: 'TAPI', icon: '🪟', tag: 'LEGACY', tagClass: 'tag-legacy',
+        bannerClass: 'pib-tapi',
+        name: 'TAPI — Telephony Application Programming Interface',
+        desc: 'Microsoft Windows telephony API (TAPI 2.x/3.x). First-party and third-party call control for Windows-based agent desktops. Found in legacy Avaya and Cisco desktop integrations.',
+        pills: ['Win32 API', 'TAPI 2.x/3.x', 'First/Third Party', 'LINE_CALLSTATE', 'TSPI'],
+        color: '#0ea5e9',
+        scenarios: ['basic-call', 'inbound', 'outbound', 'transfer', 'hold', 'conference', 'hangup']
+      },
+      stir: {
+        label: 'STIR/SHAKEN', icon: '🛡️', tag: 'NEW', tagClass: 'tag-new',
+        bannerClass: 'pib-stir',
+        name: 'STIR/SHAKEN — Caller ID Authentication',
+        desc: 'FCC-mandated caller authentication framework. STIR (Secure Telephone Identity Revisited) + SHAKEN (Signature-based Handling of Asserted info using toKENs). Prevents robocall spoofing in outbound CCaaS campaigns.',
+        pills: ['RFC 8226', 'FCC Mandated', 'JWT Tokens', 'Attestation A/B/C', 'PASSporT'],
+        color: '#8b5cf6',
+        scenarios: ['attest-call', 'verify-call', 'full-call-flow', 'blocked-spoof']
+      },
+      ai_protocol: {
+        label: 'AI Voice API', icon: '🤖', tag: 'AI', tagClass: 'tag-ai',
+        bannerClass: 'pib-ai',
+        name: 'AI Voice APIs — LLM/ASR/TTS Integration',
+        desc: 'The emerging AI layer on top of SIP/WebRTC. Covers Conversational IVR, Real-time Agent Assist, Auto-Summarization, LLM routing, and Virtual Agents (Amazon Lex, Google CCAI, OpenAI Realtime API).',
+        pills: ['OpenAI Realtime', 'Google CCAI', 'Amazon Connect', 'WebSocket STT', 'LLM Routing'],
+        color: '#a78bfa',
+        scenarios: ['virtual-agent', 'agent-assist', 'live-transcribe', 'auto-summary', 'llm-routing']
+      }
+    };
+
+    const SCENARIO_ICONS = {
+      'basic-call': '📞', 'inbound': '📲', 'outbound': '📤', 'transfer': '↗️', 'hold': '⏸', 'conference': '👥',
+      'hangup': '🔚', 'peer-connect': '🤝', 'screen-share': '🖥', 'start-recording': '⏺', 'ai-transcription': '🎙',
+      'sentiment': '💬', 'agent-assist': '🧠', 'stop-recording': '⏹', 'pstn-bridge': '🌉', 'release': '🔓', 'restart': '🔄',
+      'attest-call': '✅', 'verify-call': '🔍', 'full-call-flow': '🔄', 'blocked-spoof': '🚫',
+      'virtual-agent': '🤖', 'live-transcribe': '📝', 'auto-summary': '📊', 'llm-routing': '🧭'
+    };
+
+    const SCENARIO_LABELS = {
+      'basic-call': 'Basic Call', 'inbound': 'Inbound Call', 'outbound': 'Outbound Call', 'transfer': 'Call Transfer',
+      'hold': 'Hold / Resume', 'conference': 'Conference Call', 'hangup': 'Call Termination', 'peer-connect': 'Peer Connection',
+      'screen-share': 'Screen Share', 'start-recording': 'Start Recording', 'ai-transcription': 'AI Transcription',
+      'sentiment': 'Sentiment Analysis', 'agent-assist': 'Real-time Agent Assist', 'stop-recording': 'Stop Recording',
+      'pstn-bridge': 'PSTN Bridge', 'release': 'Release Connection', 'restart': 'Gateway Restart',
+      'attest-call': 'Attest Outbound Call', 'verify-call': 'Verify Inbound', 'full-call-flow': 'Full Auth Flow', 'blocked-spoof': 'Block Spoofed Call',
+      'virtual-agent': 'Virtual AI Agent', 'live-transcribe': 'Live Transcription', 'auto-summary': 'Auto Summarization', 'llm-routing': 'LLM-Based Routing'
+    };
+
+    // ============================================================
+    // SCENARIO DEFINITIONS: {participants, steps}
+    // each step: {from, to, label, payload, narration, type}
+    // ============================================================
+    const SCENARIOS = {
+      sip: {
+        'basic-call': {
+          participants: [
+            { name: 'Alice (UAC)', role: 'User Agent Client' },
+            { name: 'SIP Proxy', role: 'Signaling Server' },
+            { name: 'Bob (UAS)', role: 'User Agent Server' }
+          ],
+          intro: "Welcome to the S I P Basic Call scenario. S I P, the Session Initiation Protocol defined in R F C 3261, is the foundational signaling protocol powering virtually every modern V oice over I P system and C CaaS platform today.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE', type: 'send', narration: "Alice sends an INVITE request — the first message in every SIP call. It carries her session description in S D P format, advertising her IP address, port, and supported codecs.", payload: `INVITE sip:bob@biloxi.com SIP/2.0\nVia: SIP/2.0/UDP pc33.atlanta.com;branch=z9hG4bK776\nFrom: Alice <sip:alice@atlanta.com>;tag=1928301774\nTo: Bob <sip:bob@biloxi.com>\nCall-ID: a84b4c76e66710@pc33.atlanta.com\nCSeq: 314159 INVITE\nContact: <sip:alice@pc33.atlanta.com>\nContent-Type: application/sdp\n\nv=0\no=alice 2890844526 IN IP4 pc33.atlanta.com\nc=IN IP4 pc33.atlanta.com\nt=0 0\nm=audio 49172 RTP/AVP 0 8 97\na=rtpmap:0 PCMU/8000\na=rtpmap:8 PCLA/8000` },
+            { from: 1, to: 2, label: 'INVITE (fwd)', type: 'send', narration: "The SIP Proxy performs a DNS lookup, finds Bob's registered location, and forwards the INVITE. This stateful proxy records itself in the Via headers to ensure responses route back correctly.", payload: `INVITE sip:bob@client.biloxi.com SIP/2.0\n[Via headers updated - proxy adds own Via]\nMax-Forwards: 69 (decremented)` },
+            { from: 2, to: 1, label: '100 Trying', type: 'recv', narration: "100 Trying is a provisional response — it suppresses INVITE retransmissions. It simply means Bob's side is processing the request.", payload: `SIP/2.0 100 Trying\nVia: SIP/2.0/UDP server10.biloxi.com\nFrom: Alice <sip:alice@atlanta.com>;tag=1928301774\nTo: Bob <sip:bob@biloxi.com>\nCall-ID: a84b4c76e66710@pc33.atlanta.com\nCSeq: 314159 INVITE` },
+            { from: 2, to: 1, label: '180 Ringing', type: 'recv', narration: "180 Ringing tells Alice that Bob's phone is alerting. The To tag appears here, uniquely identifying this dialog. Ringback tone is generated locally at Alice's end.", payload: `SIP/2.0 180 Ringing\nTo: Bob <sip:bob@biloxi.com>;tag=a6c85cf\n[Dialog established with To-tag]` },
+            { from: 1, to: 0, label: '180 Ringing', type: 'recv', narration: "The proxy forwards 180 Ringing back to Alice. She starts playing the ringback tone to the caller.", payload: `SIP/2.0 180 Ringing (forwarded via proxy)` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Bob answers — 200 OK contains his S D P answer with his chosen codec and R T P port. This completes the offer-answer exchange and defines the media path.", payload: `SIP/2.0 200 OK\nContact: <sip:bob@192.0.2.4>\nContent-Type: application/sdp\n\nv=0\no=bob 2890844527 IN IP4 client.biloxi.com\nc=IN IP4 client.biloxi.com\nm=audio 3456 RTP/AVP 0\na=rtpmap:0 PCMU/8000` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "The 200 OK reaches Alice. She now knows Bob's media endpoint and can begin sending R T P audio.", payload: `SIP/2.0 200 OK (forwarded to Alice)` },
+            { from: 0, to: 2, label: 'ACK', type: 'info', narration: "The ACK completes the three-way handshake. Unlike INVITE, ACK bypasses the proxy and goes directly to Bob. R T P media now flows directly between Alice and Bob on the negotiated ports.", payload: `ACK sip:bob@192.0.2.4 SIP/2.0\n[Direct - bypasses proxy]\nCSeq: 314159 ACK` }
+          ],
+          outro: "Call established! R T P audio flows peer-to-peer. The SIP proxy is no longer in the media path — only the signaling path for subsequent requests like re-INVITE or BYE."
+        },
+        'transfer': {
+          participants: [
+            { name: 'Agent A', role: 'SIP UA / Transferor' },
+            { name: 'SIP Server', role: 'B2BUA / Proxy' },
+            { name: 'Agent B', role: 'SIP UA / Transfer Target' }
+          ],
+          intro: "This is the SIP Call Transfer scenario using the REFER method, defined in RFC 3515. Transfer is one of the most critical operations in a contact center.",
+          steps: [
+            { from: 0, to: 1, label: 'REFER', type: 'send', narration: "Agent A sends a REFER message. The Refer-To header tells the server where to redirect the customer's call — Agent B's SIP address.", payload: `REFER sip:customer@server.com SIP/2.0\nRefer-To: <sip:agentB@ccaas.example.com>\nReferred-By: <sip:agentA@ccaas.example.com>\nContact: <sip:agentA@desktop.example.com>` },
+            { from: 1, to: 0, label: '202 Accepted', type: 'recv', narration: "202 Accepted confirms the transfer is being processed. Not 200 OK — transfers are asynchronous operations.", payload: `SIP/2.0 202 Accepted\n[Server will now initiate new INVITE to Agent B]` },
+            { from: 1, to: 2, label: 'INVITE', type: 'send', narration: "The server initiates a new INVITE to Agent B on behalf of the customer. This is the consultative leg of the transfer.", payload: `INVITE sip:agentB@ccaas.example.com SIP/2.0\nReplaces: [original call-id]\n[Customer context preserved in headers]` },
+            { from: 2, to: 1, label: '180 Ringing', type: 'recv', narration: "Agent B's phone is ringing.", payload: `SIP/2.0 180 Ringing` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Agent B answers the call.", payload: `SIP/2.0 200 OK\n[Agent B now in call with customer]` },
+            { from: 1, to: 0, label: 'NOTIFY 200', type: 'info', narration: "The server sends a NOTIFY to Agent A confirming the transfer succeeded. Agent A can now safely hang up their leg.", payload: `NOTIFY sip:agentA@desktop.example.com SIP/2.0\nEvent: refer\nSubscription-State: terminated;reason=noresource\nContent-Type: message/sipfrag\n\nSIP/2.0 200 OK` },
+            { from: 0, to: 1, label: 'BYE', type: 'send', narration: "Agent A sends BYE to release themselves from the call. The customer is now exclusively connected to Agent B.", payload: `BYE sip:customer@server.com SIP/2.0\n[Agent A releases their leg]` }
+          ],
+          outro: "Transfer complete. The customer is now connected to Agent B. This REFER-based transfer is how all major CCaaS platforms including Genesys, Five9, and Amazon Connect handle blind and supervised transfers."
+        },
+        'hold': {
+          participants: [
+            { name: 'Agent', role: 'SIP UA / Holder' },
+            { name: 'SIP Server', role: 'Media Proxy' },
+            { name: 'Customer', role: 'SIP UA / Held Party' }
+          ],
+          intro: "SIP Call Hold uses the re-INVITE mechanism with modified SDP. When an agent puts a customer on hold, the SDP sendrecv attribute changes to sendonly.",
+          steps: [
+            { from: 0, to: 1, label: 're-INVITE (hold)', type: 'send', narration: "The agent sends a re-INVITE with a=sendonly in the SDP. This tells the remote side to stop sending media — the customer will hear hold music played by the platform.", payload: `INVITE sip:customer@server.com SIP/2.0\n[Re-INVITE to modify session]\nContent-Type: application/sdp\n\nv=0\nm=audio 49172 RTP/AVP 0\na=sendonly   ← KEY: was sendrecv` },
+            { from: 1, to: 2, label: 're-INVITE (hold)', type: 'send', narration: "The server propagates the hold to the customer side.", payload: `[Hold propagated to customer]` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Customer side confirms the hold.", payload: `SIP/2.0 200 OK\na=recvonly   ← Matches agent's sendonly` },
+            { from: 1, to: 0, label: '200 OK (held)', type: 'success', narration: "Hold confirmed. Customer hears hold music from the media server.", payload: `SIP/2.0 200 OK\n[Hold music injection active]` },
+            { from: 0, to: 1, label: 'ACK', type: 'info', narration: "Agent acknowledges the hold state.", payload: `ACK sip:customer@server.com SIP/2.0` },
+            { from: 0, to: 1, label: 're-INVITE (resume)', type: 'send', narration: "Agent is ready to return to the call. Sends another re-INVITE restoring sendrecv.", payload: `INVITE sip:customer@server.com SIP/2.0\n\nv=0\nm=audio 49172 RTP/AVP 0\na=sendrecv   ← Restored to bidirectional` },
+            { from: 1, to: 0, label: '200 OK (live)', type: 'success', narration: "Call resumed. Bidirectional audio restored between agent and customer.", payload: `SIP/2.0 200 OK\n[Hold music stopped, RTP flowing again]` }
+          ],
+          outro: "Hold and resume complete. This re-INVITE mechanism is used by every SIP-based contact center. The key insight is that hold is just an SDP attribute change — not a separate protocol operation."
+        },
+        'conference': {
+          participants: [
+            { name: 'Organizer', role: 'SIP Conference Host' },
+            { name: 'Conference Bridge', role: 'MCU / Mixer' },
+            { name: 'Participant', role: 'SIP UA' }
+          ],
+          intro: "SIP conferencing uses a Multipoint Control Unit to mix audio. Each participant has an independent SIP dialog with the bridge.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE (conf)', type: 'send', narration: "Organizer creates a conference room by sending INVITE with a conference URI.", payload: `INVITE sip:conference@mcu.example.com SIP/2.0\nSubject: Product Demo - 3-way call` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "Conference bridge allocates a mix slot and confirms.", payload: `SIP/2.0 200 OK\n[Conference ID allocated]\nContact: <sip:conf-777@mcu.example.com>` },
+            { from: 0, to: 1, label: 'REFER (add)', type: 'send', narration: "Organizer uses REFER to add the third participant to the conference.", payload: `REFER sip:conf-777@mcu.example.com SIP/2.0\nRefer-To: <sip:participant@remote.com>` },
+            { from: 1, to: 2, label: 'INVITE', type: 'send', narration: "MCU invites the participant directly.", payload: `INVITE sip:participant@remote.com SIP/2.0\n[From conference bridge]` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Participant joins. MCU now mixes all three audio streams.", payload: `SIP/2.0 200 OK\n[Participant joined conference]` },
+            { from: 1, to: 0, label: 'NOTIFY (joined)', type: 'info', narration: "Bridge notifies organizer of successful join.", payload: `NOTIFY\nEvent: conference\n[participant@remote.com joined]` }
+          ],
+          outro: "Three-way conference active. The MCU mixes all audio streams. Additional participants can be added with more REFER requests. This is how platforms like Genesys and Cisco handle supervisor barge-in and conference calling."
+        },
+        'inbound': {
+          participants: [
+            { name: 'PSTN Gateway', role: 'TDM/IP Bridge' },
+            { name: 'SIP SBC', role: 'Session Border Controller' },
+            { name: 'Agent Desktop', role: 'WebRTC/SIP Client' }
+          ],
+          intro: "Inbound call routing in a CCaaS platform: how a customer call from the phone network reaches an agent desktop.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE', type: 'send', narration: "The PSTN gateway converts the TDM call to SIP and sends an INVITE to the Session Border Controller.", payload: `INVITE sip:+15551234567@sbc.ccaas.com SIP/2.0\nP-Asserted-Identity: tel:+15559876543\n[Caller ID and DNIS in headers]` },
+            { from: 1, to: 2, label: 'INVITE (routed)', type: 'send', narration: "The SBC applies security policy, strips external headers, and routes to the available agent via ACD routing logic.", payload: `INVITE sip:agent001@desktop.ccaas.com SIP/2.0\nX-Customer-ANI: +15559876543\nX-Queue-Name: Sales\nX-Wait-Time: 12s` },
+            { from: 2, to: 1, label: '180 Ringing', type: 'recv', narration: "Agent desktop rings. The CRM screen-pop fires simultaneously using the caller ID.", payload: `SIP/2.0 180 Ringing\n[Screen pop triggered via CTI]` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Agent answers.", payload: `SIP/2.0 200 OK\n[Agent answered, RTP negotiated]` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "Answer propagated back to PSTN.", payload: `SIP/2.0 200 OK (to PSTN Gateway)` },
+            { from: 0, to: 1, label: 'ACK', type: 'info', narration: "Call established end-to-end.", payload: `ACK\n[PSTN call now bridged to agent desktop]` }
+          ],
+          outro: "Inbound call connected. The PSTN call is now bridged to the agent's WebRTC or SIP desktop. The entire process typically completes in under 500 milliseconds."
+        },
+        'outbound': {
+          participants: [
+            { name: 'Agent Desktop', role: 'Dialer Client' },
+            { name: 'SIP Server', role: 'CCaaS Platform' },
+            { name: 'PSTN Gateway', role: 'Outbound Carrier' }
+          ],
+          intro: "Outbound call flow from an agent desktop through the CCaaS platform to the PSTN.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE', type: 'send', narration: "Agent clicks dial. The desktop sends an INVITE to the CCaaS SIP server.", payload: `INVITE sip:+15557890000@sip.ccaas.com SIP/2.0\nX-Agent-ID: agent-001\nX-Campaign-ID: outbound-sales` },
+            { from: 1, to: 2, label: 'INVITE', type: 'send', narration: "CCaaS routes to the outbound carrier based on least-cost routing.", payload: `INVITE sip:+15557890000@carrier.pstn.com SIP/2.0\nP-Asserted-Identity: tel:+18005551234\n[STIR/SHAKEN attestation added]` },
+            { from: 2, to: 1, label: '100 Trying', type: 'recv', narration: "Carrier acknowledges and begins routing through PSTN.", payload: `SIP/2.0 100 Trying` },
+            { from: 2, to: 1, label: '183 Progress', type: 'recv', narration: "Early media — ringback tone delivered from the PSTN.", payload: `SIP/2.0 183 Session Progress\nContent-Type: application/sdp\n[Early media RTP for ringback]` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Remote party answers.", payload: `SIP/2.0 200 OK\n[Customer answered]` },
+            { from: 0, to: 1, label: 'ACK', type: 'info', narration: "Call connected. Agent and customer are now talking.", payload: `ACK\n[Call established]` }
+          ],
+          outro: "Outbound call connected. In predictive dialer scenarios, this process happens in parallel for hundreds of calls simultaneously, with the platform only connecting an agent when a human answers."
+        },
+        'hangup': {
+          participants: [
+            { name: 'Agent', role: 'SIP UA / Initiator' },
+            { name: 'SIP Server', role: 'B2BUA' },
+            { name: 'Customer', role: 'SIP UA / Remote Party' }
+          ],
+          intro: "Proper call termination using the SIP BYE method.",
+          steps: [
+            { from: 0, to: 1, label: 'BYE', type: 'send', narration: "Agent ends the call. BYE is sent mid-dialog — it requires the Call-ID and tags established during the INVITE.", payload: `BYE sip:customer@server.com SIP/2.0\nVia: SIP/2.0/UDP agent.desktop.com\nFrom: Agent <sip:agent@ccaas.com>;tag=1928301774\nTo: Customer <sip:customer@remote.com>;tag=a6c85cf\nCall-ID: a84b4c76e66710\nCSeq: 314160 BYE` },
+            { from: 1, to: 2, label: 'BYE', type: 'send', narration: "Server forwards BYE to the customer.", payload: `BYE forwarded to customer\n[RTP streams will stop]` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Customer side confirms termination. RTP stops.", payload: `SIP/2.0 200 OK\n[Customer session terminated]` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "Agent receives confirmation. Dialog ended.", payload: `SIP/2.0 200 OK\n[Agent session terminated]` }
+          ],
+          outro: "Call terminated. After BYE, all resources are released — RTP ports, conference slots, recording streams. Auto-summarization by AI typically triggers here in modern CCaaS platforms."
+        }
+      },
+      webrtc: {
+        'peer-connect': {
+          participants: [
+            { name: 'Browser A', role: 'RTCPeerConnection' },
+            { name: 'Signaling Server', role: 'WebSocket / SIP' },
+            { name: 'Browser B', role: 'RTCPeerConnection' }
+          ],
+          intro: "WebRTC peer connection setup. This is how every modern cloud contact center agent desktop establishes audio — no SIP phone needed, just a browser.",
+          steps: [
+            { from: 0, to: 1, label: 'getUserMedia()', type: 'send', narration: "Browser A requests microphone access via the getUserMedia API. This is the first step in any WebRTC call.", payload: `navigator.mediaDevices.getUserMedia({\n  audio: true,\n  video: false\n})\n// Returns MediaStream with audio track` },
+            { from: 0, to: 1, label: 'createOffer(SDP)', type: 'send', narration: "Browser A creates an SDP offer describing its media capabilities — codecs supported, ICE credentials, DTLS fingerprint.", payload: `RTCSessionDescription {\n  type: "offer",\n  sdp: "v=0\no=- 1234 2 IN IP4 127.0.0.1\n...\nm=audio 9 UDP/TLS/RTP/SAVPF 111 103\na=ice-ufrag:abc123\na=ice-pwd:xyz789longpassword\na=fingerprint:sha-256 AA:BB:...\na=rtpmap:111 opus/48000/2"\n}` },
+            { from: 1, to: 2, label: 'SDP Offer', type: 'send', narration: "The signaling server relays the SDP offer to Browser B. WebRTC is signaling-agnostic — this could be WebSocket, SIP, XMPP, or REST.", payload: `[Offer relayed via WebSocket]\n{"type":"offer","sdp":"..."}` },
+            { from: 2, to: 1, label: 'SDP Answer', type: 'recv', narration: "Browser B creates an answer, selecting the best codec and providing its own ICE candidates.", payload: `RTCSessionDescription {\n  type: "answer",\n  sdp: "v=0\n...\nm=audio 9 UDP/TLS/RTP/SAVPF 111\na=rtpmap:111 opus/48000/2"\n}` },
+            { from: 1, to: 0, label: 'SDP Answer', type: 'recv', narration: "Offer-answer exchange complete. Now ICE connectivity checks begin in parallel.", payload: `[Answer relayed to Browser A]` },
+            { from: 0, to: 2, label: 'ICE Candidates', type: 'info', narration: "Both browsers exchange ICE candidates — their public IPs discovered via STUN servers. TURN servers are used as fallback when direct connection is blocked.", payload: `RTCIceCandidate {\n  candidate: "candidate:842163049 1 udp\n  1677729535 192.168.1.10 51916\n  typ host",\n  // Also: srflx (STUN), relay (TURN)\n}` },
+            { from: 0, to: 2, label: 'DTLS Handshake', type: 'info', narration: "Direct peer connection established! DTLS encrypts the media. SRTP keys exchanged. This is why WebRTC is end-to-end encrypted by default.", payload: `[DTLS 1.2 handshake]\n[SRTP keying material derived]\n[Encrypted media channel active]` }
+          ],
+          outro: "WebRTC peer connection established. Opus-encoded audio flows peer-to-peer with DTLS-SRTP encryption. This is the technology powering Amazon Connect, Genesys Cloud, Five9, and Twilio Flex agent desktops."
+        },
+        'inbound': {
+          participants: [
+            { name: 'Customer Browser', role: 'WebRTC Client' },
+            { name: 'CCaaS Platform', role: 'WebRTC Gateway' },
+            { name: 'Agent Desktop', role: 'Browser / App' }
+          ],
+          intro: "Inbound customer contact via WebRTC — the modern click-to-call or in-app voice scenario.",
+          steps: [
+            { from: 0, to: 1, label: 'WebSocket Connect', type: 'send', narration: "Customer opens a support chat or clicks Call Us. The browser establishes a WebSocket connection to the CCaaS platform.", payload: `wss://support.ccaas.com/v1/voice\n[WebSocket upgrade]\n[JWT auth token sent]` },
+            { from: 0, to: 1, label: 'SDP Offer', type: 'send', narration: "Customer's browser sends an SDP offer via the WebSocket channel.", payload: `{"action":"call","offer":{"type":"offer","sdp":"..."},"queue":"support"}` },
+            { from: 1, to: 2, label: 'INVITE/Offer', type: 'send', narration: "Platform routes to an available agent and sends the offer.", payload: `[Agent selected via ACD]\n[SDP offer forwarded to agent desktop]` },
+            { from: 2, to: 1, label: 'SDP Answer', type: 'recv', narration: "Agent accepts. Answer sent back.", payload: `[Agent answered]\n{"action":"answer","sdp":{"type":"answer","sdp":"..."}}` },
+            { from: 1, to: 0, label: 'SDP Answer', type: 'recv', narration: "Answer delivered to customer browser.", payload: `[Customer receives answer]\n[ICE checks begin]` },
+            { from: 0, to: 2, label: 'Connected', type: 'success', narration: "WebRTC connection established. Agent and customer talking with encrypted audio.", payload: `[DTLS-SRTP active]\n[Opus audio flowing]\n[Screen pop fired]` }
+          ],
+          outro: "Inbound WebRTC call connected. No phone needed — customer called directly from their browser. This enables embedded support experiences in apps and websites."
+        },
+        'outbound': {
+          participants: [
+            { name: 'Agent Desktop', role: 'WebRTC Browser' },
+            { name: 'CCaaS Gateway', role: 'SIP-WebRTC Bridge' },
+            { name: 'Customer Phone', role: 'PSTN / Mobile' }
+          ],
+          intro: "Outbound call from a WebRTC agent desktop to a traditional phone number — bridging the browser to the PSTN.",
+          steps: [
+            { from: 0, to: 1, label: 'dial(+15551234)', type: 'send', narration: "Agent clicks dial. The WebRTC client sends a dial request over WebSocket.", payload: `{"action":"dial","destination":"+15551234","agentId":"agent-001"}` },
+            { from: 1, to: 2, label: 'SIP INVITE', type: 'send', narration: "The gateway converts the WebRTC request to SIP and routes to the PSTN carrier.", payload: `INVITE sip:+15551234@carrier.com SIP/2.0\n[SIP-WebRTC interworking]\n[Codec transcoding: Opus -> PCMU]` },
+            { from: 1, to: 0, label: 'ringing event', type: 'recv', narration: "Platform sends ringing event back to the agent's browser via WebSocket.", payload: `{"event":"ringing","destination":"+15551234"}` },
+            { from: 2, to: 1, label: '200 OK', type: 'success', narration: "Customer answers.", payload: `SIP/2.0 200 OK` },
+            { from: 1, to: 0, label: 'answered event', type: 'success', narration: "Agent WebRTC connection established with PSTN bridge.", payload: `{"event":"answered","callId":"call-789"}\n[RTP bridged between WebRTC and PSTN]` }
+          ],
+          outro: "WebRTC agent is now talking to a PSTN customer. The gateway handles codec transcoding between Opus (WebRTC) and PCMU/PCMA (PSTN). This is the architecture of every cloud contact center today."
+        },
+        'transfer': {
+          participants: [
+            { name: 'Agent A', role: 'WebRTC Desktop' },
+            { name: 'CCaaS Platform', role: 'Call Controller' },
+            { name: 'Agent B', role: 'WebRTC Desktop' }
+          ],
+          intro: "WebRTC call transfer in a CCaaS platform — coordinated by the platform rather than SIP REFER.",
+          steps: [
+            { from: 0, to: 1, label: 'transfer request', type: 'send', narration: "Agent A clicks Transfer and selects Agent B. A REST or WebSocket transfer request is sent to the platform.", payload: `{"action":"transfer","targetAgent":"agent-002","type":"blind"}` },
+            { from: 1, to: 2, label: 'incoming call', type: 'send', narration: "Platform rings Agent B with the customer's context — caller ID, wait time, sentiment score.", payload: `{"event":"incoming","fromCustomer":"+15551234","sentiment":"frustrated","waitTime":"2m10s"}` },
+            { from: 2, to: 1, label: 'accepted', type: 'recv', narration: "Agent B accepts the transfer.", payload: `{"action":"accept","callId":"call-456"}` },
+            { from: 1, to: 0, label: 'transfer complete', type: 'success', narration: "Platform notifies Agent A the transfer succeeded. Agent A is released.", payload: `{"event":"transferComplete","agentReleased":"agent-001"}` }
+          ],
+          outro: "Transfer complete. WebRTC transfers in CCaaS platforms are typically REST or WebSocket driven — the platform handles the SIP complexity transparently."
+        },
+        'hold': {
+          participants: [
+            { name: 'Agent', role: 'WebRTC Desktop' },
+            { name: 'CCaaS Platform', role: 'Media Controller' },
+            { name: 'Customer', role: 'WebRTC / PSTN' }
+          ],
+          intro: "Hold in WebRTC contact centers — implemented via platform signaling rather than SIP re-INVITE.",
+          steps: [
+            { from: 0, to: 1, label: 'hold(callId)', type: 'send', narration: "Agent clicks Hold. The platform API is called.", payload: `{"action":"hold","callId":"call-123"}` },
+            { from: 1, to: 2, label: 'hold music', type: 'send', narration: "Platform injects hold music into the customer's audio stream and mutes the agent.", payload: `[Hold music injected]\n[Agent audio muted]\n[Customer on hold]` },
+            { from: 1, to: 0, label: 'on-hold event', type: 'recv', narration: "Agent receives confirmation the customer is on hold.", payload: `{"event":"onHold","callId":"call-123"}` },
+            { from: 0, to: 1, label: 'resume(callId)', type: 'send', narration: "Agent clicks Resume.", payload: `{"action":"resume","callId":"call-123"}` },
+            { from: 1, to: 2, label: 'resume audio', type: 'success', narration: "Hold music stopped. Bidirectional audio restored.", payload: `[Hold music removed]\n[Bidirectional audio restored]` },
+            { from: 1, to: 0, label: 'resumed event', type: 'success', narration: "Agent confirmed the call is live again.", payload: `{"event":"resumed","callId":"call-123"}` }
+          ],
+          outro: "Hold implemented. In WebRTC CCaaS platforms, hold is a platform-controlled operation — no re-INVITE needed. The platform handles all the SDP complexity."
+        },
+        'screen-share': {
+          participants: [
+            { name: 'Agent Browser', role: 'Screen Sharer' },
+            { name: 'CCaaS Platform', role: 'WebRTC MCU' },
+            { name: 'Customer Browser', role: 'Screen Viewer' }
+          ],
+          intro: "WebRTC screen sharing for agent co-browsing and visual assistance — increasingly common in modern CCaaS.",
+          steps: [
+            { from: 0, to: 1, label: 'getDisplayMedia()', type: 'send', narration: "Agent requests screen capture. Browser prompts to choose a window or screen.", payload: `navigator.mediaDevices.getDisplayMedia({\n  video: { cursor: "always" },\n  audio: false\n})\n// Returns screen capture MediaStream` },
+            { from: 0, to: 1, label: 'addTrack(screen)', type: 'send', narration: "Screen track added to the existing peer connection via renegotiation.", payload: `peerConnection.addTrack(screenTrack)\n// Triggers onnegotiationneeded\n// New SDP offer created with video track` },
+            { from: 1, to: 2, label: 'video offer', type: 'send', narration: "Platform relays the updated SDP with video to the customer.", payload: `[Updated SDP with video track]\n[H264/VP8 video codec negotiated]` },
+            { from: 2, to: 1, label: 'video answer', type: 'recv', narration: "Customer browser accepts the video stream.", payload: `SDP Answer with video accepted` },
+            { from: 0, to: 2, label: 'screen stream', type: 'success', narration: "Customer can now see the agent's screen. This enables visual support, product demos, and form-filling assistance.", payload: `[H264 video stream flowing]\n[Customer sees agent screen in real-time]` }
+          ],
+          outro: "Screen share active. The agent can visually guide the customer. This is a key differentiator for premium support tiers in modern contact centers."
+        },
+        'hangup': {
+          participants: [
+            { name: 'Agent', role: 'WebRTC Client' },
+            { name: 'CCaaS Platform', role: 'Call Manager' },
+            { name: 'Customer', role: 'WebRTC / PSTN' }
+          ],
+          intro: "Ending a WebRTC call and triggering post-call AI workflows.",
+          steps: [
+            { from: 0, to: 1, label: 'hangup(callId)', type: 'send', narration: "Agent ends the call.", payload: `{"action":"hangup","callId":"call-123","agentId":"agent-001"}` },
+            { from: 1, to: 2, label: 'disconnect', type: 'send', narration: "Platform terminates the customer connection.", payload: `[Customer connection terminated]\n[RTP streams stopped]` },
+            { from: 1, to: 0, label: 'post-call AI', type: 'info', narration: "Platform triggers AI post-call workflows automatically: transcription, summarization, sentiment scoring, and CRM update.", payload: `{"event":"callEnded",\n "duration":187,\n "transcriptReady": true,\n "summaryGenerated": true,\n "sentimentScore": 0.72,\n "actionItems": ["send_follow_up_email"]}` }
+          ],
+          outro: "Call ended and post-call AI activated. Auto-summarization reduces after-call work from minutes to seconds, a key ROI driver in AI-driven CCaaS."
+        }
+      },
+      siprec: {
+        'start-recording': {
+          participants: [
+            { name: 'SBC / B2BUA', role: 'SIP Recording Client (SRC)' },
+            { name: 'Recording Server', role: 'SIP Recording Server (SRS)' },
+            { name: 'AI Engine', role: 'STT / NLU Service' }
+          ],
+          intro: "SIPREC, defined in RFC 7866, is the standard for forking live call audio to recording and AI analysis systems. This is the protocol enabling real-time agent assist in enterprise contact centers.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE (SIPREC)', type: 'send', narration: "The Session Border Controller detects a call and sends a SIPREC INVITE to the recording server. The body contains the recording metadata in XML.", payload: `INVITE sip:srs@recording.example.com SIP/2.0\nContent-Type: multipart/mixed;boundary=boundary1\n\n--boundary1\nContent-Type: application/sdp\n[Two RTP streams: caller + callee audio]\n\n--boundary1\nContent-Type: application/rs-metadata+xml\n\n<recording>\n  <session><associate-time>2025-02-17T10:30:00Z</associate-time></session>\n  <participant id="p1"><nameID aor="sip:customer@pstn.com"/></participant>\n  <participant id="p2"><nameID aor="sip:agent@ccaas.com"/></participant>\n  <stream label="1" session-id="s1" participant-id="p1">\n    <label>customer-audio</label>\n  </stream>\n</recording>` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "Recording server accepts. Two separate RTP streams will flow — one for each speaker. This enables speaker-separated transcription.", payload: `SIP/2.0 200 OK\n[Two RTP endpoints allocated]\n[Speaker-diarized streams ready]` },
+            { from: 0, to: 1, label: 'RTP Stream 1', type: 'send', narration: "Customer audio stream starts flowing to the recording server as a fork of the live RTP.", payload: `RTP Stream (Port 5004)\n[Customer audio - forked, not bridged]\n[Original call unaffected]` },
+            { from: 0, to: 1, label: 'RTP Stream 2', type: 'send', narration: "Agent audio stream starts flowing separately.", payload: `RTP Stream (Port 5006)\n[Agent audio - separate channel]` },
+            { from: 1, to: 2, label: 'WebSocket Audio', type: 'info', narration: "Recording server streams audio to the AI engine via WebSocket for real-time transcription.", payload: `wss://stt.ai-engine.com/v1/stream\n[PCMU -> PCM16 conversion]\n[16kHz mono stream]\n{"config":{"encoding":"LINEAR16","sampleRate":16000,"model":"telephony"}}` }
+          ],
+          outro: "SIPREC recording session established. Two speaker-separated audio streams are flowing to the AI engine for real-time transcription and analysis, without affecting the original call quality."
+        },
+        'ai-transcription': {
+          participants: [
+            { name: 'SIPREC Server', role: 'Recording Server' },
+            { name: 'STT Engine', role: 'Speech-to-Text AI' },
+            { name: 'Agent Desktop', role: 'Assist Panel' }
+          ],
+          intro: "Real-time AI transcription pipeline powered by SIPREC audio forking. This is how agent assist tools like Google CCAI and Amazon Contact Lens work.",
+          steps: [
+            { from: 0, to: 1, label: 'audio chunk', type: 'send', narration: "Audio chunks stream continuously to the STT engine at low latency — typically 100ms chunks.", payload: `[Audio chunk: 100ms, 16kHz PCM16]\n[Speaker: customer]\nBytes: 3200` },
+            { from: 1, to: 2, label: 'partial transcript', type: 'info', narration: "Partial transcripts arrive within 300-500ms of speech — enabling real-time display.", payload: `{"type":"partial","speaker":"customer",\n "text":"I've been waiting for my order for",\n "confidence":0.91}` },
+            { from: 0, to: 1, label: 'audio chunk', type: 'send', narration: "Next audio chunk processed.", payload: `[Audio chunk: 100ms]\n[Speaker: customer continued]` },
+            { from: 1, to: 2, label: 'final transcript', type: 'success', narration: "Final transcript with speaker diarization.", payload: `{"type":"final","speaker":"customer",\n "text":"I have been waiting for my order for three weeks and nobody has helped me.",\n "confidence":0.97,\n "sentiment":"negative",\n "intent":"complaint_delivery",\n "entities":{"wait_time":"3 weeks"}}` },
+            { from: 1, to: 2, label: 'KB suggestion', type: 'info', narration: "AI engine detects the intent and pushes a relevant knowledge base article to the agent's screen.", payload: `{"type":"suggestion",\n "title":"Delivery Delay Resolution Guide",\n "url":"/kb/delivery-delays",\n "confidence":0.89,\n "actions":["check_order_status","offer_compensation"]}` }
+          ],
+          outro: "Real-time transcription and intent detection complete. The agent sees the full transcript and AI-suggested next steps on their screen without manually searching. This is the core value proposition of AI-driven CCaaS."
+        },
+        'sentiment': {
+          participants: [
+            { name: 'STT Engine', role: 'Transcription Service' },
+            { name: 'NLU / Sentiment', role: 'AI Analysis Engine' },
+            { name: 'Supervisor', role: 'Monitoring Dashboard' }
+          ],
+          intro: "Real-time sentiment analysis — a critical AI layer in modern CCaaS that enables proactive supervisor intervention.",
+          steps: [
+            { from: 0, to: 1, label: 'transcript + audio', type: 'send', narration: "Both text transcript and raw audio features are sent to the sentiment engine for multimodal analysis.", payload: `{"transcript":"This is completely unacceptable!",\n "audio_features":{"pitch":180,"energy":0.85,"rate":1.3},\n "speaker":"customer","timestamp":42.3}` },
+            { from: 1, to: 2, label: 'sentiment alert', type: 'info', narration: "Sentiment drops sharply. Real-time alert sent to supervisor dashboard.", payload: `{"type":"sentiment_alert","severity":"high",\n "score":-0.82,\n "emotion":"angry",\n "trigger_phrase":"completely unacceptable",\n "call_id":"call-456",\n "agent":"agent-001",\n "recommendation":"supervisor_barge_available"}` },
+            { from: 1, to: 2, label: 'CSAT prediction', type: 'info', narration: "AI predicts CSAT score for this call in real-time based on conversation patterns.", payload: `{"csat_prediction":1.8,\n "escalation_risk":0.87,\n "churn_risk":0.64,\n "suggested_action":"offer_callback_or_supervisor"}` }
+          ],
+          outro: "Sentiment monitoring active. Supervisors see a live heat map of all active calls colored by sentiment. This enables them to intervene before customers hang up unhappy — a game-changer for contact center QA."
+        },
+        'agent-assist': {
+          participants: [
+            { name: 'AI Engine', role: 'LLM + RAG' },
+            { name: 'Agent Desktop', role: 'Assist Panel' },
+            { name: 'CRM / KB', role: 'Knowledge Sources' }
+          ],
+          intro: "Real-time agent assist — the most impactful AI application in CCaaS today, combining SIPREC audio with LLM intelligence.",
+          steps: [
+            { from: 0, to: 2, label: 'context query', type: 'send', narration: "AI engine queries CRM and knowledge base with extracted entities from the conversation.", payload: `{"query":"delivery delay resolution","customer_id":"cust-789","order_id":"ORD-12345","channel":"inbound_voice"}` },
+            { from: 2, to: 0, label: 'context response', type: 'recv', narration: "CRM returns customer history, order status, and previous interactions.", payload: `{"customer":"John Smith","tier":"premium","order_status":"in_transit_delayed","delay_reason":"warehouse","eligible_for":"$20_credit","previous_contacts":2}` },
+            { from: 0, to: 1, label: 'suggested response', type: 'info', narration: "AI generates a suggested response for the agent — not auto-reply, but agent-guided assistance.", payload: `{"type":"response_suggestion",\n "text":"I can see your order is delayed at our warehouse. I apologize for the inconvenience. I can offer you a $20 credit and expedite your shipping. Would that work for you?",\n "source":"ai_generated+crm_context",\n "confidence":0.94}` },
+            { from: 0, to: 1, label: 'next best action', type: 'info', narration: "AI suggests the next best action based on resolution patterns from thousands of similar calls.", payload: `{"type":"next_best_action",\n "actions":[\n  {"action":"apply_credit","priority":1,"label":"Apply $20 Credit"},\n  {"action":"expedite_shipping","priority":2,"label":"Expedite Order"},\n  {"action":"escalate","priority":3,"label":"Transfer to Manager"}\n ]}` }
+          ],
+          outro: "Agent assist delivering real-time guidance. Studies show AI-assisted agents resolve calls 40% faster with 25% higher CSAT scores. This is why every major CCaaS vendor — Genesys, Five9, NICE, Amazon Connect — has made agent assist their primary AI investment."
+        },
+        'stop-recording': {
+          participants: [
+            { name: 'SBC / B2BUA', role: 'SIP Recording Client' },
+            { name: 'Recording Server', role: 'SIPREC SRS' },
+            { name: 'Storage / AI', role: 'Post-Call Pipeline' }
+          ],
+          intro: "Stopping a SIPREC recording session and triggering post-call AI processing.",
+          steps: [
+            { from: 0, to: 1, label: 'BYE (recording)', type: 'send', narration: "When the call ends, the SBC sends BYE on the SIPREC recording session.", payload: `BYE sip:srs@recording.example.com SIP/2.0\nCall-ID: siprec-session-abc123\n[Recording session terminated]` },
+            { from: 1, to: 0, label: '200 OK', type: 'success', narration: "Recording server acknowledges. All RTP streams stop.", payload: `SIP/2.0 200 OK\n[Recording finalized]\n[Total duration: 3m12s]` },
+            { from: 1, to: 2, label: 'post-call job', type: 'info', narration: "Recording server triggers the post-call AI pipeline: full transcription, summarization, compliance checks.", payload: `{"job":"post_call_analysis",\n "call_id":"call-456",\n "recording_url":"s3://recordings/2025/call-456.wav",\n "tasks":["full_transcript","auto_summary","compliance_pci","quality_score","coaching_triggers"]}` }
+          ],
+          outro: "Recording complete. Post-call AI processing begins immediately — full transcript, auto-summary, PCI compliance check, quality score, and coaching triggers are all generated automatically, typically within 60 seconds of call end."
+        }
+      },
+      mgcp: {
+        'basic-call': {
+          participants: [
+            { name: 'Call Agent (CA)', role: 'MGC — Media Gateway Controller' },
+            { name: 'Media Gateway', role: 'MG — TDM/IP Bridge' },
+            { name: 'PSTN', role: 'Public Switched Telephone Network' }
+          ],
+          intro: "MGCP, the Media Gateway Control Protocol defined in RFC 3435, is a master-slave protocol where the Call Agent has full control. The gateway does exactly what it's told — no intelligence of its own.",
+          steps: [
+            { from: 0, to: 1, label: 'CRCX', type: 'send', narration: "CreateConnection: the Call Agent instructs the gateway to create a connection on a specific endpoint. The gateway is completely controlled by the CA.", payload: `CRCX 1200 aaln/1@gw.pstn.example.com MGCP 1.0\nC: A3C47F21456789F0\nL: p:10, a:PCMU\nM: recvonly\n\n[Instructs gateway to create RTP endpoint\non PSTN line aaln/1, receive-only mode]` },
+            { from: 1, to: 0, label: '200 (ack)', type: 'recv', narration: "Gateway responds with 200, the allocated connection ID, and its SDP — the RTP address and port where it will receive media.", payload: `200 1200 OK\nI: FDE234C8\n\nv=0\no=- 25678 753849 IN IP4 128.96.41.1\nc=IN IP4 128.96.41.1\nm=audio 3456 RTP/AVP 0` },
+            { from: 0, to: 1, label: 'RQNT', type: 'send', narration: "RequestNotification: CA asks the gateway to notify it when the phone goes off-hook — a ring event.", payload: `RQNT 1201 aaln/1@gw.pstn.example.com MGCP 1.0\nX: 0123456789AC\nR: L/hu(N)\nS: L/rg\n\n[Request: notify on off-hook (L/hu)\nSignal: ring (L/rg)]` },
+            { from: 1, to: 2, label: 'RING', type: 'send', narration: "Gateway signals the PSTN to ring the phone.", payload: `[Physical ring signal applied to line]\n[Alerting customer]` },
+            { from: 1, to: 0, label: 'NTFY (offhook)', type: 'recv', narration: "Customer picks up — gateway notifies the Call Agent immediately.", payload: `NTFY 2000 aaln/1@gw.pstn.example.com MGCP 1.0\nX: 0123456789AC\nO: L/hu\n\n[Line went off-hook - phone answered]` },
+            { from: 0, to: 1, label: 'MDCX (sendrecv)', type: 'send', narration: "ModifyConnection: CA switches the connection to full duplex now that both parties are ready.", payload: `MDCX 1202 aaln/1@gw.pstn.example.com MGCP 1.0\nC: A3C47F21456789F0\nI: FDE234C8\nM: sendrecv\n\n[Mode changed from recvonly to sendrecv]` },
+            { from: 1, to: 0, label: '200 (ok)', type: 'success', narration: "Full duplex established. Call is live.", payload: `200 1202 OK\n[RTP flowing bidirectionally]` }
+          ],
+          outro: "MGCP call established. This master-slave architecture means all intelligence lives in the Call Agent — the gateway is just a controlled hardware device. This is still common in large telco and enterprise environments bridging legacy TDM infrastructure."
+        },
+        'inbound': {
+          participants: [
+            { name: 'Call Agent', role: 'MGCP Controller' },
+            { name: 'Media Gateway', role: 'PSTN Interface' },
+            { name: 'VoIP Network', role: 'IP Destination' }
+          ],
+          intro: "MGCP inbound call from PSTN — the gateway detects an incoming ring and notifies the Call Agent.",
+          steps: [
+            { from: 1, to: 0, label: 'NTFY (ring)', type: 'recv', narration: "Gateway detects an incoming PSTN ring and notifies the Call Agent.", payload: `NTFY 3000 aaln/2@gw.pstn.example.com MGCP 1.0\nO: L/rg\n[Incoming PSTN ring detected on line aaln/2]` },
+            { from: 0, to: 1, label: 'CRCX', type: 'send', narration: "Call Agent creates a connection to receive the inbound call.", payload: `CRCX 1300 aaln/2@gw.pstn.example.com MGCP 1.0\nC: B4D58G32567890G1\nL: p:10, a:PCMU\nM: recvonly` },
+            { from: 1, to: 0, label: '200 (conn)', type: 'recv', narration: "Connection allocated with RTP endpoint.", payload: `200 1300 OK\nI: ABE345D9\n[RTP endpoint ready at 128.96.41.2:4000]` },
+            { from: 0, to: 1, label: 'RQNT (answer)', type: 'send', narration: "CA instructs gateway to answer the call.", payload: `RQNT 1301 aaln/2@gw.pstn.example.com MGCP 1.0\nS: L/ans\n[Signal: answer the call]` },
+            { from: 0, to: 1, label: 'MDCX (connect)', type: 'send', narration: "Gateway connects RTP to the VoIP destination.", payload: `MDCX 1302 aaln/2@gw.pstn.example.com MGCP 1.0\nM: sendrecv\nRM: [VoIP destination SDP]` },
+            { from: 1, to: 0, label: '200 (bridged)', type: 'success', narration: "Call bridged from PSTN to VoIP network.", payload: `200 1302 OK\n[PSTN ↔ VoIP bridge active]` }
+          ],
+          outro: "Inbound PSTN call bridged to VoIP. MGCP's strength is its simplicity — the gateway has no routing intelligence, making it easy to manage centrally at scale."
+        },
+        'pstn-bridge': {
+          participants: [
+            { name: 'Call Agent', role: 'MGCP Controller' },
+            { name: 'PSTN Gateway A', role: 'Originating MG' },
+            { name: 'PSTN Gateway B', role: 'Terminating MG' }
+          ],
+          intro: "MGCP PSTN-to-PSTN bridge — hairpinning a call through two media gateways under central control.",
+          steps: [
+            { from: 0, to: 1, label: 'CRCX (leg A)', type: 'send', narration: "Call Agent creates connection on originating gateway.", payload: `CRCX 1400 aaln/3@gw-a.pstn.com MGCP 1.0\nM: recvonly` },
+            { from: 1, to: 0, label: '200 (SDP-A)', type: 'recv', narration: "Gateway A returns its RTP endpoint.", payload: `200 1400 OK\nI: LEG-A-001\n[SDP-A: 10.0.1.5:5000]` },
+            { from: 0, to: 2, label: 'CRCX (leg B)', type: 'send', narration: "Simultaneously creates connection on terminating gateway.", payload: `CRCX 1401 aaln/4@gw-b.pstn.com MGCP 1.0\nM: recvonly\nRM: [SDP-A from Gateway A]` },
+            { from: 2, to: 0, label: '200 (SDP-B)', type: 'recv', narration: "Gateway B returns its RTP endpoint.", payload: `200 1401 OK\nI: LEG-B-001\n[SDP-B: 10.0.2.7:5002]` },
+            { from: 0, to: 1, label: 'MDCX (bridge)', type: 'send', narration: "CA updates Gateway A to send to Gateway B's endpoint.", payload: `MDCX 1402 aaln/3@gw-a.pstn.com MGCP 1.0\nI: LEG-A-001\nM: sendrecv\nRM: [SDP-B from Gateway B]` },
+            { from: 1, to: 2, label: 'RTP media', type: 'success', narration: "RTP flows directly between the two gateways. The Call Agent is out of the media path.", payload: `[RTP bridged directly GW-A ↔ GW-B]\n[Call Agent in signaling path only]` }
+          ],
+          outro: "PSTN bridge established. The Call Agent orchestrated the connection but is now only in the signaling path — media flows directly. This hairpin architecture is common in carrier-grade deployments handling millions of simultaneous calls."
+        },
+        'release': {
+          participants: [
+            { name: 'Call Agent', role: 'MGCP Controller' },
+            { name: 'Media Gateway', role: 'Active Connection' },
+            { name: 'PSTN', role: 'Physical Line' }
+          ],
+          intro: "MGCP connection release — properly tearing down a connection and freeing resources.",
+          steps: [
+            { from: 0, to: 1, label: 'DLCX', type: 'send', narration: "DeleteConnection: CA instructs gateway to delete the connection and release the RTP resources.", payload: `DLCX 1500 aaln/1@gw.pstn.example.com MGCP 1.0\nC: A3C47F21456789F0\nI: FDE234C8\n[Delete specific connection]` },
+            { from: 1, to: 0, label: '250 (stats)', type: 'recv', narration: "Gateway returns call statistics before releasing.", payload: `250 1500 OK\nP: PS=1245, OS=24900, PR=1237, OR=24740,\n   PL=8, JI=5, LA=15\n\n[PS=packets sent, OS=octets sent\n PR=packets received, PL=packets lost\n JI=jitter ms, LA=latency ms]` },
+            { from: 1, to: 2, label: 'on-hook', type: 'send', narration: "Gateway drops the PSTN line.", payload: `[Physical line released]\n[On-hook signal applied]` }
+          ],
+          outro: "Connection released. MGCP's DeleteConnection returns QoS statistics which are valuable for network monitoring and SLA compliance reporting."
+        },
+        'restart': {
+          participants: [
+            { name: 'Media Gateway', role: 'MGCP Endpoint' },
+            { name: 'Call Agent', role: 'MGCP Controller' },
+            { name: 'Backup CA', role: 'Redundancy Controller' }
+          ],
+          intro: "MGCP gateway restart — how gateways reconnect to their controlling agent after a restart or network failure.",
+          steps: [
+            { from: 0, to: 1, label: 'RSIP (restart)', type: 'send', narration: "RestartInProgress: Gateway sends this to its controlling agent after booting up or recovering from failure.", payload: `RSIP 9000 *@gw.pstn.example.com MGCP 1.0\nRM: restart\nRD: 0\n\n[All endpoints restarting]\n[RD=0: immediate restart]` },
+            { from: 1, to: 0, label: '200 OK', type: 'recv', narration: "Call Agent acknowledges the restart.", payload: `200 9000 OK\n[CA aware of gateway state]` },
+            { from: 1, to: 0, label: 'AUEP (audit)', type: 'send', narration: "Call Agent audits the gateway to check current state of all endpoints.", payload: `AUEP 9001 *@gw.pstn.example.com MGCP 1.0\nF: A,E,I,O,S,R,LD,RD\n[Audit all endpoints and connections]` },
+            { from: 0, to: 1, label: '200 (state)', type: 'recv', narration: "Gateway reports clean state — all connections cleared after restart.", payload: `200 9001 OK\n[All endpoints idle]\n[No active connections]\n[Ready for service]` }
+          ],
+          outro: "Gateway restart complete. MGCP's restart procedure ensures the Call Agent always knows the true state of its gateways — critical for carrier-grade reliability."
+        }
+      },
+      csta: {
+        'basic-call': {
+          participants: [
+            { name: 'CTI Client', role: 'CSTA Application' },
+            { name: 'CSTA Server', role: 'Middleware / AES' },
+            { name: 'PBX / UCM', role: 'Telecom Switch' }
+          ],
+          intro: "CSTA third-party call control — the ECMA-323 standard used by Avaya AES, Cisco JTAPI, and Genesys for CTI integrations.",
+          steps: [
+            { from: 0, to: 1, label: 'MakeCall', type: 'send', narration: "CTI application sends an XML MakeCall request. CSTA controls the PBX on behalf of the application — this is third-party call control.", payload: `<?xml version="1.0"?>\n<MakeCall xmlns="http://www.ecma-international.org/standards/ecma-323/csta/ed3">\n  <callingDevice>+15551001</callingDevice>\n  <calledDirectoryNumber>+15552002</calledDirectoryNumber>\n  <autoOriginate>doNotPrompt</autoOriginate>\n</MakeCall>` },
+            { from: 1, to: 2, label: 'Initiate Call', type: 'send', narration: "CSTA server translates and forwards to the PBX.", payload: `[Vendor-specific PBX command]\n[Avaya: AnswerCall / Genesys: T-Server command]` },
+            { from: 1, to: 0, label: 'MakeCallResponse', type: 'recv', narration: "CSTA returns a call ID for tracking.", payload: `<MakeCallResponse>\n  <callingDevice>\n    <deviceIdentifier>+15551001</deviceIdentifier>\n  </callingDevice>\n  <initiatedCall>\n    <callID>CALL-00345</callID>\n    <deviceID>+15551001</deviceID>\n  </initiatedCall>\n</MakeCallResponse>` },
+            { from: 1, to: 0, label: 'DeliveredEvent', type: 'info', narration: "PBX event: called party is alerting (ringing).", payload: `<DeliveredEvent>\n  <monitorCrossRefID>MCR001</monitorCrossRefID>\n  <connection>\n    <callID>CALL-00345</callID>\n    <deviceID>+15552002</deviceID>\n  </connection>\n  <alertingDevice><deviceIdentifier>+15552002</deviceIdentifier></alertingDevice>\n  <callingDevice><deviceIdentifier>+15551001</deviceIdentifier></callingDevice>\n</DeliveredEvent>` },
+            { from: 1, to: 0, label: 'EstablishedEvent', type: 'success', narration: "Call answered — PBX confirms establishment.", payload: `<EstablishedEvent>\n  <monitorCrossRefID>MCR001</monitorCrossRefID>\n  <establishedConnection>\n    <callID>CALL-00345</callID>\n    <deviceID>+15551001</deviceID>\n  </establishedConnection>\n  <answeringDevice><deviceIdentifier>+15552002</deviceIdentifier></answeringDevice>\n</EstablishedEvent>` }
+          ],
+          outro: "CSTA call established. The key advantage of CSTA over SIP is vendor-neutral third-party control — the CTI application can control calls without being a SIP endpoint itself."
+        },
+        'transfer': {
+          participants: [
+            { name: 'CTI App', role: 'CSTA Client' },
+            { name: 'CSTA Server', role: 'Avaya AES / AE Svcs' },
+            { name: 'PBX', role: 'Avaya CM / Cisco UCM' }
+          ],
+          intro: "CSTA Single Step Transfer — the most common transfer method in enterprise contact centers using Avaya or Cisco PBX.",
+          steps: [
+            { from: 0, to: 1, label: 'SingleStepTransfer', type: 'send', narration: "SingleStepTransferCall in one XML request — no need to set up a consultation call first.", payload: `<SingleStepTransferCall>\n  <activeCall>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </activeCall>\n  <transferredTo>1002</transferredTo>\n  <userData>\n    <userDataDetail>\n      <accountInfo>VIP_CUSTOMER</accountInfo>\n    </userDataDetail>\n  </userData>\n</SingleStepTransferCall>` },
+            { from: 1, to: 2, label: 'Execute Transfer', type: 'send', narration: "CSTA server sends the transfer command to the PBX.", payload: `[PBX transfer command]\n[Original call redirected to ext 1002]` },
+            { from: 1, to: 0, label: 'SingleStepTransferResponse', type: 'recv', narration: "Response with new call ID for the transferred call.", payload: `<SingleStepTransferCallResponse>\n  <transferredCall>\n    <callID>CALL-00567</callID>\n    <deviceID>1002</deviceID>\n  </transferredCall>\n</SingleStepTransferCallResponse>` },
+            { from: 1, to: 0, label: 'TransferredEvent', type: 'success', narration: "PBX confirms the transfer. Customer data preserved.", payload: `<TransferredEvent>\n  <primaryOldCall>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </primaryOldCall>\n  <transferredToDevice>\n    <deviceIdentifier>1002</deviceIdentifier>\n  </transferredToDevice>\n  <transferredConnections>\n    <callID>CALL-00567</callID>\n  </transferredConnections>\n</TransferredEvent>` }
+          ],
+          outro: "CSTA transfer complete. The user data field preserves customer context — CRM data, sentiment score, previous interactions — when passing the call to the new agent."
+        },
+        'hold': {
+          participants: [
+            { name: 'CTI App', role: 'CSTA Client' },
+            { name: 'CSTA Server', role: 'AE Services' },
+            { name: 'PBX', role: 'Telecom Switch' }
+          ],
+          intro: "CSTA Hold and Retrieve — standard contact center hold using third-party control.",
+          steps: [
+            { from: 0, to: 1, label: 'HoldCall', type: 'send', narration: "CTI application requests hold on behalf of the agent.", payload: `<HoldCall>\n  <callToBeHeld>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </callToBeHeld>\n</HoldCall>` },
+            { from: 1, to: 2, label: 'Hold Request', type: 'send', narration: "PBX places the call on hold.", payload: `[PBX hold command to device 1001]` },
+            { from: 1, to: 0, label: 'HeldEvent', type: 'recv', narration: "PBX confirms call is on hold.", payload: `<HeldEvent>\n  <heldConnection>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </heldConnection>\n  <holdingDevice><deviceIdentifier>1001</deviceIdentifier></holdingDevice>\n</HeldEvent>` },
+            { from: 0, to: 1, label: 'RetrieveCall', type: 'send', narration: "Agent is ready to resume. CTI sends RetrieveCall.", payload: `<RetrieveCall>\n  <callToBeRetrieved>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </callToBeRetrieved>\n</RetrieveCall>` },
+            { from: 1, to: 0, label: 'RetrievedEvent', type: 'success', narration: "Call retrieved from hold. Active again.", payload: `<RetrievedEvent>\n  <retrievedConnection>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </retrievedConnection>\n</RetrievedEvent>` }
+          ],
+          outro: "CSTA hold and retrieve complete. In production systems, hold duration is tracked for SLA monitoring, and extended holds can trigger supervisor alerts."
+        },
+        'conference': {
+          participants: [
+            { name: 'CTI App', role: 'CSTA Client' },
+            { name: 'CSTA Server', role: 'AE Services' },
+            { name: 'PBX', role: 'Conference Controller' }
+          ],
+          intro: "CSTA Conference Call — merging two calls into a three-party conference using the PBX bridge.",
+          steps: [
+            { from: 0, to: 1, label: 'SetupTransfer', type: 'send', narration: "First, set up a consultation call to the new party.", payload: `<SetupTransfer>\n  <activeCall><callID>CALL-001</callID><deviceID>1001</deviceID></activeCall>\n  <consultedDevice>1003</consultedDevice>\n</SetupTransfer>` },
+            { from: 1, to: 0, label: 'HeldEvent + new call', type: 'recv', narration: "Original customer placed on hold while consulting.", payload: `[Customer on hold]\n<SetupTransferResponse><newCall><callID>CALL-002</callID></newCall></SetupTransferResponse>` },
+            { from: 0, to: 1, label: 'ConferenceCall', type: 'send', narration: "Merge both calls into a conference.", payload: `<ConferenceCall>\n  <heldCall><callID>CALL-001</callID><deviceID>1001</deviceID></heldCall>\n  <activeCall><callID>CALL-002</callID><deviceID>1001</deviceID></activeCall>\n</ConferenceCall>` },
+            { from: 1, to: 0, label: 'ConferencedEvent', type: 'success', narration: "Three-party conference active on PBX bridge.", payload: `<ConferencedEvent>\n  <conferenceConnections>\n    <connection><callID>CALL-CONF-001</callID><deviceID>1001</deviceID></connection>\n    <connection><callID>CALL-CONF-001</callID><deviceID>1003</deviceID></connection>\n    <connection><callID>CALL-CONF-001</callID><deviceID>customer</deviceID></connection>\n  </conferenceConnections>\n</ConferencedEvent>` }
+          ],
+          outro: "CSTA conference established with three parties. The PBX handles the mixing. CSTA's third-party control model means the CTI app orchestrated this without being in the audio path at all."
+        },
+        'inbound': {
+          participants: [
+            { name: 'PBX', role: 'Call Distributor' },
+            { name: 'CSTA Server', role: 'Event Publisher' },
+            { name: 'CTI App', role: 'CRM / Screen Pop' }
+          ],
+          intro: "CSTA inbound call notification — how CRM screen pops work in Avaya and Cisco environments.",
+          steps: [
+            { from: 0, to: 1, label: 'RINGING', type: 'send', narration: "PBX detects inbound call and notifies CSTA server.", payload: `[Inbound call: +15559876 -> Agent 1001]` },
+            { from: 1, to: 2, label: 'DeliveredEvent', type: 'info', narration: "CSTA delivers event to the CTI application. Caller ID triggers CRM lookup.", payload: `<DeliveredEvent>\n  <connection><callID>CALL-IN-001</callID><deviceID>1001</deviceID></connection>\n  <callingDevice><deviceIdentifier>+15559876543</deviceIdentifier></callingDevice>\n  <alertingDevice><deviceIdentifier>1001</deviceIdentifier></alertingDevice>\n</DeliveredEvent>` },
+            { from: 2, to: 1, label: 'CRM lookup', type: 'send', narration: "CTI app queries CRM with the caller ID.", payload: `SELECT * FROM customers WHERE phone = '+15559876543'\n[Returns: John Smith, Premium, Open Ticket #TKT-789]` },
+            { from: 1, to: 2, label: 'AnswerCall', type: 'recv', narration: "Screen pop fired. CTI auto-answers or notifies agent.", payload: `[Screen pop: John Smith - Premium Customer]\n[Open ticket: Delivery Issue]\n[Suggested KB: Delivery Delay Resolution]` },
+            { from: 1, to: 2, label: 'EstablishedEvent', type: 'success', narration: "Agent answers. Full customer context visible before saying hello.", payload: `<EstablishedEvent>\n  <establishedConnection>\n    <callID>CALL-IN-001</callID><deviceID>1001</deviceID>\n  </establishedConnection>\n</EstablishedEvent>` }
+          ],
+          outro: "Inbound with screen pop complete. The agent sees who's calling and why before answering — no more asking 'how can I help you' to a customer who's called 3 times about the same issue."
+        },
+        'outbound': {
+          participants: [
+            { name: 'CTI App', role: 'Predictive Dialer' },
+            { name: 'CSTA Server', role: 'AE Services' },
+            { name: 'PBX', role: 'Outbound Dialer' }
+          ],
+          intro: "CSTA outbound predictive dialer — how enterprise contact centers dial thousands of numbers automatically.",
+          steps: [
+            { from: 0, to: 1, label: 'MakeCall (bulk)', type: 'send', narration: "Predictive dialer fires multiple MakeCall requests simultaneously.", payload: `<MakeCall>\n  <callingDevice>outbound-trunk-01</callingDevice>\n  <calledDirectoryNumber>+15557654321</calledDirectoryNumber>\n  <autoOriginate>doNotPrompt</autoOriginate>\n</MakeCall>` },
+            { from: 1, to: 2, label: 'Dial', type: 'send', narration: "PBX dials the number.", payload: `[PSTN dial initiated]` },
+            { from: 1, to: 0, label: 'DeliveredEvent', type: 'info', narration: "Call delivered and alerting.", payload: `<DeliveredEvent>\n  <alertingDevice>+15557654321</alertingDevice>\n</DeliveredEvent>` },
+            { from: 1, to: 0, label: 'EstablishedEvent', type: 'success', narration: "Customer answered. Dialer assigns to available agent.", payload: `<EstablishedEvent>\n  <answeringDevice>+15557654321</answeringDevice>\n</EstablishedEvent>\n[Agent assigned via ACD]` }
+          ],
+          outro: "Predictive dialer call connected. The CSTA predictive algorithm dials ahead of agent availability — when the customer answers, an agent is already waiting. This maximizes agent talk time in outbound campaigns."
+        },
+        'hangup': {
+          participants: [
+            { name: 'CTI App', role: 'CSTA Client' },
+            { name: 'CSTA Server', role: 'AE Services' },
+            { name: 'PBX', role: 'Telecom Switch' }
+          ],
+          intro: "CSTA call termination and post-call workflow trigger.",
+          steps: [
+            { from: 0, to: 1, label: 'ClearConnection', type: 'send', narration: "CTI app sends ClearConnection to terminate the call.", payload: `<ClearConnection>\n  <connectionToBeCleared>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </connectionToBeCleared>\n</ClearConnection>` },
+            { from: 1, to: 2, label: 'Drop Call', type: 'send', narration: "CSTA drops the call on the PBX.", payload: `[PBX call termination]\n[CDR record generated]` },
+            { from: 1, to: 0, label: 'ConnectionClearedEvent', type: 'success', narration: "Call cleared. CDR and post-call workflows triggered.", payload: `<ConnectionClearedEvent>\n  <droppedConnection>\n    <callID>CALL-00345</callID>\n    <deviceID>1001</deviceID>\n  </droppedConnection>\n  <releasingDevice><deviceIdentifier>1001</deviceIdentifier></releasingDevice>\n</ConnectionClearedEvent>` },
+            { from: 1, to: 0, label: 'ServiceObservedEvent', type: 'info', narration: "Quality monitoring system receives call end notification for scoring.", payload: `<HeldEvent released/>\n[CDR sent to WFM]\n[Quality monitoring notified]\n[Post-call survey triggered]` }
+          ],
+          outro: "Call terminated. The ConnectionClearedEvent triggers CRM wrap-up, CDR logging, WFM stats update, and post-call survey — all automatically."
+        }
+      },
+      tapi: {
+        'basic-call': {
+          participants: [
+            { name: 'App / CRM', role: 'TAPI Application' },
+            { name: 'TAPI Service', role: 'Windows Telephony Svc' },
+            { name: 'Phone Device', role: 'IP / PSTN Phone' }
+          ],
+          intro: "TAPI is Microsoft's Windows telephony API. It abstracts phone hardware behind a consistent Windows API — your app doesn't need to know if it's a Cisco, Avaya, or any other phone.",
+          steps: [
+            { from: 0, to: 1, label: 'lineInitializeEx()', type: 'send', narration: "Application initializes TAPI. This registers with Windows Telephony Service.", payload: `lineInitializeEx(\n  &hLineApp,\n  hInstance,\n  lineCallbackFunc,  // Event callback\n  "MyCTIApp",\n  &dwNumDevs,\n  &dwAPIVersion,\n  &lineInitExParams\n);\n// Returns: number of line devices available` },
+            { from: 0, to: 1, label: 'lineOpen()', type: 'send', narration: "Open a specific line device. Analogous to picking up a phone line.", payload: `lineOpen(\n  hLineApp,\n  dwDeviceID,     // 0 = first line\n  &hLine,\n  dwAPIVersion,   // 0x00030000 = TAPI 3.0\n  0,\n  dwCallbackInst,\n  LINECALLPRIVILEGE_OWNER,\n  dwMediaModes,\n  NULL\n);` },
+            { from: 1, to: 0, label: 'LINE_LINEDEVSTATE', type: 'recv', narration: "Windows Telephony Service confirms the line is open and ready.", payload: `dwMsg:    LINE_LINEDEVSTATE\ndwParam1: LINEDEVSTATE_OPEN\ndwParam2: 0\ndwParam3: 0\n[Line hLine is now open]` },
+            { from: 0, to: 1, label: 'lineMakeCall()', type: 'send', narration: "Make an outbound call. TAPI returns a request ID — the call is asynchronous.", payload: `lineMakeCall(\n  hLine,\n  &hCall,\n  "15551234",     // Number to dial\n  1,              // Country code (USA)\n  NULL            // Use default call params\n);\n// Returns: positive dwRequestID` },
+            { from: 1, to: 2, label: 'Dial', type: 'send', narration: "TAPI service sends dial command to the physical phone device.", payload: `[Dial command to phone device]\n[TSPI: TSPI_lineMakeCall()]` },
+            { from: 1, to: 0, label: 'LINE_CALLSTATE: DIALTONE', type: 'recv', narration: "First callback: dialtone detected.", payload: `dwMsg:    LINE_CALLSTATE\nhCall:    0x12345678\ndwParam1: LINECALLSTATE_DIALTONE\ndwParam2: LINEDIALTONEMODE_NORMAL` },
+            { from: 1, to: 0, label: 'LINE_CALLSTATE: DIALING', type: 'recv', narration: "Digits being dialed.", payload: `dwMsg:    LINE_CALLSTATE\ndwParam1: LINECALLSTATE_DIALING` },
+            { from: 1, to: 0, label: 'LINE_CALLSTATE: CONNECTED', type: 'success', narration: "Call answered! CONNECTED state means both parties are on the line.", payload: `dwMsg:    LINE_CALLSTATE\ndwParam1: LINECALLSTATE_CONNECTED\ndwParam2: LINECONNECTEDMODE_ACTIVE` }
+          ],
+          outro: "TAPI call connected. The event-driven callback model is TAPI's defining characteristic — your app registers a callback and receives state change notifications. This same model influenced modern WebSocket-based CCaaS event APIs."
+        },
+        'inbound': {
+          participants: [
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Application', role: 'TAPI CRM App' },
+            { name: 'Phone Line', role: 'Physical Device' }
+          ],
+          intro: "TAPI inbound call handling — the classic Windows CTI screen pop scenario.",
+          steps: [
+            { from: 2, to: 0, label: 'RING', type: 'recv', narration: "Incoming ring detected by the phone device.", payload: `[Physical ring on line 0]` },
+            { from: 0, to: 1, label: 'LINE_CALLSTATE: OFFERING', type: 'send', narration: "TAPI notifies the application of an incoming call. The OFFERING state is the critical one — this triggers the screen pop.", payload: `dwMsg:    LINE_CALLSTATE\nhCall:    0x87654321  // NEW call handle\ndwParam1: LINECALLSTATE_OFFERING\ndwParam2: 0\n\n// Application should call lineGetCallInfo()\n// to retrieve CallerID, CalledID etc.` },
+            { from: 1, to: 0, label: 'lineGetCallInfo()', type: 'send', narration: "App immediately queries call info to get caller ID for the screen pop.", payload: `lineGetCallInfo(hCall, &callInfo);\n\n// Returns LINECALLINFO with:\n// callerID: "5559876543"\n// callerIDName: "John Smith"\n// calledID: "5551001"\n// dwMediaMode: LINEMEDIAMODE_INTERACTIVEVOICE` },
+            { from: 1, to: 0, label: 'lineAnswer()', type: 'send', narration: "Application answers the call programmatically — or waits for physical answer.", payload: `lineAnswer(\n  hCall,\n  NULL,  // No user-user info\n  0\n);\n// Screen pop fires simultaneously` },
+            { from: 0, to: 1, label: 'LINE_CALLSTATE: CONNECTED', type: 'success', narration: "Call connected. CRM screen pop displayed.", payload: `dwMsg:    LINE_CALLSTATE\ndwParam1: LINECALLSTATE_CONNECTED\n[CRM record for "John Smith" displayed]` }
+          ],
+          outro: "TAPI inbound complete. The OFFERING state and lineGetCallInfo() are the foundation of every Windows-based CTI screen pop ever built — this pattern has been used in call centers since the 1990s."
+        },
+        'outbound': {
+          participants: [
+            { name: 'CRM App', role: 'TAPI Dialer' },
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Phone Device', role: 'IP / Analog Phone' }
+          ],
+          intro: "TAPI outbound call — click-to-dial from a CRM application.",
+          steps: [
+            { from: 0, to: 1, label: 'lineMakeCall()', type: 'send', narration: "Agent clicks phone number in CRM. TAPI lineMakeCall fires.", payload: `lineMakeCall(hLine, &hCall, "+15557890", 1, NULL);` },
+            { from: 1, to: 2, label: 'Dial', type: 'send', narration: "TAPI dials the number on the physical device.", payload: `[TSPI_lineMakeCall to phone hardware]` },
+            { from: 1, to: 0, label: 'PROCEEDING', type: 'recv', narration: "Call is being processed by the network.", payload: `LINE_CALLSTATE: LINECALLSTATE_PROCEEDING` },
+            { from: 1, to: 0, label: 'RINGBACK', type: 'recv', narration: "Ringback tone — remote phone is ringing.", payload: `LINE_CALLSTATE: LINECALLSTATE_RINGBACK` },
+            { from: 1, to: 0, label: 'CONNECTED', type: 'success', narration: "Call answered.", payload: `LINE_CALLSTATE: LINECALLSTATE_CONNECTED` }
+          ],
+          outro: "TAPI click-to-dial complete. This is one of the oldest and most-used CTI features — directly dialing from a CRM record with a single click, eliminating misdialed numbers."
+        },
+        'transfer': {
+          participants: [
+            { name: 'App', role: 'TAPI Client' },
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Target Extension', role: 'Transfer Destination' }
+          ],
+          intro: "TAPI call transfer — blind transfer using lineBlindTransfer.",
+          steps: [
+            { from: 0, to: 1, label: 'lineBlindTransfer()', type: 'send', narration: "Blind transfer to extension 456.", payload: `lineBlindTransfer(\n  hCall,\n  "456",         // Target extension\n  0              // Country code\n);` },
+            { from: 1, to: 2, label: 'Transfer', type: 'send', narration: "TAPI service executes the transfer through the PBX.", payload: `[Transfer command to PBX]\n[Original call redirected to ext 456]` },
+            { from: 1, to: 0, label: 'CALLSTATE: IDLE', type: 'recv', narration: "Original call handle becomes IDLE — the transfer released this leg.", payload: `LINE_CALLSTATE: LINECALLSTATE_IDLE\n[Transfer completed - original call released]` }
+          ],
+          outro: "TAPI blind transfer complete. For supervised transfer, lineSetupTransfer and lineCompleteTransfer are used to first establish a consultation call before completing."
+        },
+        'hold': {
+          participants: [
+            { name: 'App', role: 'TAPI Client' },
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Active Call', role: 'Held Endpoint' }
+          ],
+          intro: "TAPI hold and unhold.",
+          steps: [
+            { from: 0, to: 1, label: 'lineHold()', type: 'send', narration: "Application places the call on hold.", payload: `lineHold(hCall);\n// Returns dwRequestID for async tracking` },
+            { from: 1, to: 0, label: 'CALLSTATE: ONHOLD', type: 'recv', narration: "Call confirmed on hold.", payload: `LINE_CALLSTATE: LINECALLSTATE_ONHOLD\n[Hold music playing to caller]` },
+            { from: 0, to: 1, label: 'lineUnhold()', type: 'send', narration: "Agent ready to return. Unhold issued.", payload: `lineUnhold(hCall);\n// Retrieve from hold` },
+            { from: 1, to: 0, label: 'CALLSTATE: CONNECTED', type: 'success', narration: "Call retrieved. Active again.", payload: `LINE_CALLSTATE: LINECALLSTATE_CONNECTED\n[Bidirectional audio restored]` }
+          ],
+          outro: "TAPI hold complete. Simple and reliable — the TAPI hold model has remained unchanged since TAPI 2.0 in 1996."
+        },
+        'conference': {
+          participants: [
+            { name: 'App', role: 'TAPI Client' },
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Third Party', role: 'Conference Participant' }
+          ],
+          intro: "TAPI three-way conference using lineSetupConference and lineCompleteConference.",
+          steps: [
+            { from: 0, to: 1, label: 'lineSetupConference()', type: 'send', narration: "Set up the conference by creating a consultation call to the third party.", payload: `lineSetupConference(\n  hCall,           // Existing call handle\n  hLine,\n  &hConfCall,      // New conference handle\n  &hConsultCall,   // Consultation call handle\n  3,               // Number of parties\n  NULL\n);` },
+            { from: 0, to: 1, label: 'lineMakeCall(consult)', type: 'send', narration: "Dial the third party via the consultation handle.", payload: `lineMakeCall(hLine, &hConsultCall, "789", 0, NULL);` },
+            { from: 1, to: 0, label: 'CONNECTED (consult)', type: 'recv', narration: "Third party answers the consultation call.", payload: `LINE_CALLSTATE: LINECALLSTATE_CONNECTED\n[hConsultCall connected to ext 789]` },
+            { from: 0, to: 1, label: 'lineCompleteConference()', type: 'send', narration: "Merge calls into conference.", payload: `lineCompleteConference(\n  hConsultCall,\n  hConfCall,\n  LINECALLFEATURE_COMPLETECONF,\n  NULL\n);` },
+            { from: 1, to: 0, label: 'CONFERENCE ACTIVE', type: 'success', narration: "Three-party conference established.", payload: `LINE_CALLSTATE: LINECALLSTATE_CONFERENCED\n[3 parties in conference]` }
+          ],
+          outro: "TAPI conference complete. The two-step setup-then-complete model gives agents the ability to speak privately with the third party before merging — a supervised conference."
+        },
+        'hangup': {
+          participants: [
+            { name: 'App', role: 'TAPI Client' },
+            { name: 'TAPI Service', role: 'Windows Telephony' },
+            { name: 'Active Call', role: 'Connected Endpoint' }
+          ],
+          intro: "TAPI call termination — properly dropping and deallocating a call.",
+          steps: [
+            { from: 0, to: 1, label: 'lineDrop()', type: 'send', narration: "Drop the call. Equivalent to hanging up the phone.", payload: `lineDrop(\n  hCall,\n  NULL,   // No user-user info\n  0\n);\n// Returns dwRequestID` },
+            { from: 1, to: 0, label: 'CALLSTATE: IDLE', type: 'recv', narration: "Call is now IDLE — disconnected.", payload: `LINE_CALLSTATE: LINECALLSTATE_IDLE\n[Call disconnected]` },
+            { from: 0, to: 1, label: 'lineDeallocateCall()', type: 'send', narration: "Deallocate the call handle. CRITICAL — failure to deallocate causes resource leaks.", payload: `lineDeallocateCall(hCall);\n// Release call handle\n// Free kernel resources\nhCall = NULL; // Don't use handle after this` },
+            { from: 0, to: 1, label: 'lineClose()', type: 'send', narration: "Close the line when done.", payload: `lineClose(hLine);\nlineShutdown(hLineApp);\n[All TAPI resources released]` }
+          ],
+          outro: "TAPI call properly terminated. The lineDrop then lineDeallocateCall sequence is critical — many TAPI resource leaks are caused by forgetting to deallocate. TAPI 3.0 added COM-based cleanup to help with this."
+        }
+      },
+      stir: {
+        'attest-call': {
+          participants: [
+            { name: 'Originating SP', role: 'Outbound Carrier' },
+            { name: 'Authentication Svc', role: 'SHAKEN STI-AS' },
+            { name: 'Terminating SP', role: 'Inbound Carrier' }
+          ],
+          intro: "STIR/SHAKEN caller authentication — the FCC-mandated standard to combat robocall spoofing. This is now required for all outbound CCaaS campaigns in the US.",
+          steps: [
+            { from: 0, to: 1, label: 'Attestation Request', type: 'send', narration: "The originating service provider submits the call information to its SHAKEN Authentication Service for signing.", payload: `{\n  "origID": "dcd8fb20-a938-4",\n  "orig": {"tn": "15551234567"},\n  "dest": {"tn": ["15559876543"]},\n  "iat": 1740000000,\n  "attest": "A"  // Full attestation\n}` },
+            { from: 1, to: 0, label: 'PASSporT Token (JWT)', type: 'recv', narration: "The Authentication Service signs the claim with its private key and returns a PASSporT — a JSON Web Token.", payload: `// JWT Header\n{"typ":"passport","alg":"ES256","x5u":"https://cert.authority.com/key"}\n\n// JWT Payload\n{"attest":"A","dest":{"tn":["15559876543"]},\n "iat":1740000000,"orig":{"tn":"15551234567"},\n "origid":"dcd8fb20-a938-4"}\n\n// Signature: ECDSA with P-256\n[Encoded as base64url]` },
+            { from: 0, to: 2, label: 'INVITE + Identity', type: 'send', narration: "The PASSporT is added to the SIP INVITE as an Identity header.", payload: `INVITE sip:+15559876543@terminating.com SIP/2.0\nIdentity: eyJhbGciOiJFUzI1NiIsInR5cCI6InBh...\n  ;info=<https://cert.authority.com/key>\n  ;alg=ES256\n  ;ppt=shaken\nP-Asserted-Identity: <sip:+15551234567>` }
+          ],
+          outro: "Attestation Level A means the carrier can fully verify this call's origin. Level B means the subscriber but not the call, Level C is a gateway call with no user verification. Level A calls get the highest delivery rates."
+        },
+        'verify-call': {
+          participants: [
+            { name: 'Terminating SP', role: 'Inbound Carrier' },
+            { name: 'Verification Svc', role: 'SHAKEN STI-VS' },
+            { name: 'Called Party', role: 'Customer Phone' }
+          ],
+          intro: "STIR/SHAKEN verification on the receiving end — validating the caller's identity before delivering the call.",
+          steps: [
+            { from: 0, to: 1, label: 'Verify Token', type: 'send', narration: "Terminating carrier extracts the Identity header and submits the PASSporT for verification.", payload: `{\n  "identity": "eyJhbGciOiJFUzI1NiIs...",\n  "fromURI": "sip:+15551234567@orig.com",\n  "toURI": "sip:+15559876543@term.com"\n}` },
+            { from: 1, to: 0, label: 'Verification Result', type: 'recv', narration: "Verification service returns the result — valid signature, full attestation.", payload: `{\n  "verstat": "TN-Validation-Passed-A",\n  "attestation": "A",\n  "origTN": "15551234567",\n  "timestamp": 1740000000,\n  "signature_valid": true\n}` },
+            { from: 0, to: 2, label: 'Call + CNAM tag', type: 'send', narration: "Call delivered with verified caller ID badge. Customer's phone may show a verified checkmark.", payload: `[Call delivered]\nP-Asserted-Identity: <sip:+15551234567>\nVerstat: TN-Validation-Passed-A\n[Customer phone displays: ✓ Verified Business Call]` }
+          ],
+          outro: "Verification complete. Calls with full A attestation get delivered without challenge. Carriers use this to filter robocalls — unverified calls may be labeled Spam Risk or blocked entirely."
+        },
+        'full-call-flow': {
+          participants: [
+            { name: 'CCaaS Platform', role: 'Outbound Dialer' },
+            { name: 'STIR/SHAKEN Infra', role: 'Auth + Verify Chain' },
+            { name: 'Customer Phone', role: 'End Recipient' }
+          ],
+          intro: "Full STIR/SHAKEN flow for a CCaaS outbound campaign call — from dialer to customer's phone.",
+          steps: [
+            { from: 0, to: 1, label: 'Sign Call', type: 'send', narration: "CCaaS platform signs the outbound call before sending to carrier.", payload: `[PASSporT created]\n[Attestation: A - full verification]\n[ECDSA signature applied]` },
+            { from: 1, to: 0, label: 'Identity Header', type: 'recv', narration: "Signed JWT returned and added to SIP INVITE.", payload: `Identity: eyJhbGci... ;ppt=shaken` },
+            { from: 0, to: 2, label: 'Verified INVITE', type: 'send', narration: "Call traverses carriers with STIR/SHAKEN headers.", payload: `[SIP INVITE with Identity header]\n[Carrier chain preserves headers]` },
+            { from: 1, to: 2, label: 'Verify', type: 'info', narration: "Each carrier in the chain validates the signature.", payload: `[TN-Validation-Passed-A]` },
+            { from: 1, to: 2, label: 'Deliver', type: 'success', narration: "Customer's carrier delivers with verified caller ID. Compliance achieved.", payload: `[Delivered as: COMPANY NAME ✓]\n[No spam label]\n[TCPA-compliant attestation logged]` }
+          ],
+          outro: "Full STIR/SHAKEN flow complete. For CCaaS outbound campaigns, proper STIR/SHAKEN implementation means higher answer rates, TCPA compliance, and protection against your numbers being flagged as spam."
+        },
+        'blocked-spoof': {
+          participants: [
+            { name: 'Spoofer', role: 'Fraudulent Caller' },
+            { name: 'Carrier Chain', role: 'STIR/SHAKEN Filter' },
+            { name: 'Customer Phone', role: 'Protected Recipient' }
+          ],
+          intro: "STIR/SHAKEN blocking a spoofed call — the key protection it provides.",
+          steps: [
+            { from: 0, to: 1, label: 'INVITE (no sig)', type: 'send', narration: "Spoofer attempts to impersonate a legitimate company number. No valid STIR/SHAKEN signature present.", payload: `INVITE sip:+15559876543@carrier.com SIP/2.0\nP-Asserted-Identity: <sip:+18005551234> ← SPOOFED\n[No Identity header]\n[No PASSporT]` },
+            { from: 1, to: 0, label: 'Verify: FAIL', type: 'error', narration: "Carrier's verification system detects missing or invalid signature.", payload: `{\n  "verstat": "TN-Validation-Failed",\n  "reason": "no_signature",\n  "action": "label_or_block"\n}` },
+            { from: 1, to: 2, label: 'SPAM RISK label', type: 'info', narration: "Carrier labels or blocks the call. Customer sees Spam Risk or call is silently dropped.", payload: `[Delivered as: SPAM RISK]\n// OR\n[Call blocked - never reaches customer]\n[Fraud report generated]` }
+          ],
+          outro: "Spoofed call blocked. STIR/SHAKEN is now mandatory for all US carriers. For CCaaS platforms running outbound campaigns, proper implementation protects both the callee and your company's phone number reputation."
+        }
+      },
+      ai_protocol: {
+        'virtual-agent': {
+          participants: [
+            { name: 'Customer', role: 'Caller' },
+            { name: 'AI Voice IVR', role: 'LLM-Powered Agent' },
+            { name: 'Backend APIs', role: 'CRM / Order System' }
+          ],
+          intro: "AI Virtual Agent call flow — the LLM-powered conversational IVR replacing traditional DTMF menu trees. This is the most transformative development in CCaaS since VoIP.",
+          steps: [
+            { from: 0, to: 1, label: 'call arrives', type: 'send', narration: "Customer calls the support line. Instead of press 1 for billing, an AI voice agent answers.", payload: `[Inbound call routed to AI agent]\n[ASR engine activated]\n[LLM context initialized with:\n  - Customer account data\n  - Product catalog\n  - Policy documents]` },
+            { from: 1, to: 0, label: 'greeting (TTS)', type: 'recv', narration: "AI agent greets naturally. Text-to-Speech converts LLM output to voice in real-time.", payload: `AI: "Hi! I'm the virtual assistant for Acme Corp.\nI can help with orders, billing, and tech support.\nWhat can I help you with today?"\n[Latency: ~300ms to first word]` },
+            { from: 0, to: 1, label: 'speech input', type: 'send', narration: "Customer speaks naturally — no menu navigation needed.", payload: `Customer: "I want to check on my order,\nit was supposed to arrive yesterday."\n[ASR: Google/AWS/Azure STT]\n[Real-time transcription]` },
+            { from: 1, to: 2, label: 'API query', type: 'send', narration: "LLM understands intent and calls the order management API.", payload: `{\n  "action": "get_order_status",\n  "customer_id": "CUST-789",\n  "identifier": "recent_order",\n  "context": "checking_delivery_delay"\n}` },
+            { from: 2, to: 1, label: 'order data', type: 'recv', narration: "System returns order status.", payload: `{\n  "order_id": "ORD-45678",\n  "status": "in_transit",\n  "expected": "2025-02-16",\n  "delay_reason": "weather",\n  "new_estimate": "2025-02-18",\n  "eligible_reimbursement": true\n}` },
+            { from: 1, to: 0, label: 'response (TTS)', type: 'success', narration: "AI agent responds empathetically with accurate information, no hold time required.", payload: `AI: "I can see order 45678 was delayed by\none day due to weather in your area.\nIt should now arrive tomorrow by 8 PM.\nWould you like me to waive your shipping fee\nas a courtesy for the delay?"\n[Full resolution without human agent]` }
+          ],
+          outro: "AI virtual agent resolved the call in 45 seconds without human intervention. This is deflection — the holy grail of CCaaS cost reduction. Modern AI agents can handle 40-60% of inbound volume, with natural escalation to live agents for complex cases."
+        },
+        'agent-assist': {
+          participants: [
+            { name: 'Live Call', role: 'Agent + Customer' },
+            { name: 'AI Assist Engine', role: 'LLM + RAG System' },
+            { name: 'Agent Screen', role: 'Desktop Panel' }
+          ],
+          intro: "Real-time AI agent assist — the LLM co-pilot that helps human agents during live calls.",
+          steps: [
+            { from: 0, to: 1, label: 'live transcript', type: 'send', narration: "SIPREC feeds the live transcript to the AI engine in real-time.", payload: `[Streaming transcript]\nCustomer: "I've been a customer for 10 years and\nI'm seriously considering canceling my account."\nSentiment: -0.78 | Intent: churn_risk` },
+            { from: 1, to: 2, label: 'churn alert', type: 'info', narration: "AI detects churn signal and immediately surfaces retention offers.", payload: `⚠️ CHURN RISK DETECTED\nCustomer tenure: 10 years (HIGH VALUE)\nLTV: $12,400\n\nSuggested response:\n"I really appreciate your 10 years with us.\nI'd like to speak with you personally about\nthis — may I put you on a brief hold while\nI check what I can offer you?"\n\nAvailable offers:\n→ 3 months at 20% discount\n→ Free premium upgrade\n→ Dedicated account manager` },
+            { from: 0, to: 1, label: 'agent query', type: 'send', narration: "Agent types a question to the AI for policy guidance.", payload: `Agent query: "what's our retention policy for\n10+ year customers who want to cancel?"` },
+            { from: 1, to: 2, label: 'policy answer', type: 'recv', narration: "AI instantly retrieves the relevant policy from the knowledge base.", payload: `📋 Retention Policy (10+ year customers):\n\n1. Authorized to offer up to 25% discount\n   for 6 months (no approval needed)\n2. Free tier upgrade (requires manager code)\n3. Priority support tier activation\n\nSource: Customer_Retention_Policy_v4.2.pdf\nSection 3.2 | Confidence: 0.96` },
+            { from: 1, to: 2, label: 'auto summary', type: 'info', narration: "AI maintains a running call summary the agent can reference.", payload: `📝 Live Call Summary:\n- 10-year customer expressing cancel intent\n- Reason: [not yet stated, likely price]\n- Agent offered: [pending]\n- Sentiment trend: ↘️ improving after greeting\n- Recommended outcome: Retention offer` }
+          ],
+          outro: "Agent assist in action. Agents with AI co-pilots handle calls 35% faster, achieve 28% higher first-call resolution, and have 90% lower ramp time for new hires. This is the primary ROI driver for CCaaS AI investment in 2025."
+        },
+        'live-transcribe': {
+          participants: [
+            { name: 'WebRTC / SIPREC', role: 'Audio Stream' },
+            { name: 'STT Service', role: 'Speech-to-Text API' },
+            { name: 'Downstream AI', role: 'NLU / Analytics' }
+          ],
+          intro: "Real-time transcription pipeline — the foundational layer enabling all AI features in a modern contact center.",
+          steps: [
+            { from: 0, to: 1, label: 'audio stream', type: 'send', narration: "Audio streams from the call — either via WebSocket directly from WebRTC, or via SIPREC from a SBC.", payload: `WebSocket: wss://stt.google.com/v1/stream\n\nContent-Type: audio/pcm;rate=16000\n[16kHz 16-bit PCM audio]\n[Chunk size: 100ms = 3200 bytes]` },
+            { from: 1, to: 2, label: 'partial result', type: 'info', narration: "Partial results arrive within 200-400ms — fast enough for real-time display.", payload: `{\n  "type": "partial",\n  "transcript": "I want to check on",\n  "confidence": 0.87,\n  "speaker": "customer",\n  "timestamp_ms": 1234\n}` },
+            { from: 1, to: 2, label: 'final result', type: 'success', narration: "Final transcript with word-level timestamps for downstream processing.", payload: `{\n  "type": "final",\n  "transcript": "I want to check on my order number 45678",\n  "confidence": 0.97,\n  "words": [\n    {"word":"I","start":0.0,"end":0.1},\n    {"word":"order","start":0.8,"end":1.0},\n    {"word":"45678","start":1.1,"end":1.6}\n  ],\n  "entities": {"order_id": "45678"},\n  "language": "en-US"\n}` },
+            { from: 2, to: 1, label: 'NLU result', type: 'info', narration: "NLU engine processes the final transcript for intent and entity extraction.", payload: `{\n  "intent": "check_order_status",\n  "confidence": 0.94,\n  "entities": {\n    "order_id": {"value": "45678", "confidence": 0.99}\n  },\n  "next_action": "query_order_api"\n}` }
+          ],
+          outro: "Live transcription pipeline complete. This stream powers agent assist, compliance monitoring, quality scoring, and real-time analytics simultaneously. The key metric is latency — under 500ms is the target for a seamless assist experience."
+        },
+        'auto-summary': {
+          participants: [
+            { name: 'Call Recording', role: 'Full Transcript' },
+            { name: 'LLM Engine', role: 'GPT-4 / Claude / Gemini' },
+            { name: 'CRM / WFM', role: 'Business Systems' }
+          ],
+          intro: "Post-call auto-summarization using LLMs — eliminating After Call Work and reducing agent handle time by 3-5 minutes per call.",
+          steps: [
+            { from: 0, to: 1, label: 'transcript + metadata', type: 'send', narration: "Full call transcript sent to the LLM with structured prompt.", payload: `SYSTEM: You are a contact center AI. Analyze this call and provide a structured summary.\n\nCall Duration: 4m32s\nCustomer: John Smith (Premium, 10yr)\nAgent: Sarah J.\n\nTRANSCRIPT:\n[Customer]: My order hasn't arrived...\n[Agent]: Let me check that for you...\n[Full transcript]` },
+            { from: 1, to: 2, label: 'structured summary', type: 'success', narration: "LLM returns a structured summary within 2-3 seconds — ready to paste into CRM.", payload: `{\n  "summary": "Customer called regarding Order 45678 delayed 1 day due to weather. Agent confirmed new delivery date of Feb 18 and applied $5 shipping credit as courtesy. Customer satisfied with resolution.",\n  \n  "action_items": [\n    "Monitor order 45678 delivery",\n    "Credit applied: $5 shipping refund"\n  ],\n  \n  "disposition": "resolved",\n  "csat_prediction": 4.2,\n  "topics": ["delivery_delay","order_status","billing_credit"],\n  \n  "coaching_flags": [],\n  "compliance_flags": []\n}` },
+            { from: 1, to: 2, label: 'CRM auto-update', type: 'info', narration: "Summary auto-populated into CRM record. Agent just clicks confirm.", payload: `[CRM Updated Automatically]\nContact: John Smith\nCase: #45678-DLY\nResolution: Delivery delay resolved\nCredit Applied: $5\nNext Action: Monitor delivery\n[Agent approval: 1 click vs 5 minutes typing]` }
+          ],
+          outro: "Auto-summarization complete in 3 seconds. Industry studies show this saves 3-5 minutes of after-call work per call. At 200 calls per agent per day, that's 10-16 hours of productivity gained daily — per agent."
+        },
+        'llm-routing': {
+          participants: [
+            { name: 'IVR / Virtual Agent', role: 'Intent Detector' },
+            { name: 'LLM Router', role: 'Intelligent Routing Engine' },
+            { name: 'Agent Pool', role: 'Skilled Workforce' }
+          ],
+          intro: "LLM-based intelligent call routing — replacing static IVR decision trees with AI that understands context and routes to the best-fit agent.",
+          steps: [
+            { from: 0, to: 1, label: 'caller intent', type: 'send', narration: "Virtual agent captures the caller's intent in natural language — no DTMF menus.", payload: `{\n  "transcript": "I have a technical issue with my enterprise API integration, specifically the OAuth token refresh is failing",\n  "caller_id": "+15551234",\n  "account_tier": "enterprise",\n  "previous_calls": 2,\n  "sentiment": "frustrated"\n}` },
+            { from: 1, to: 2, label: 'routing query', type: 'send', narration: "LLM routing engine analyzes the intent and queries the agent pool.", payload: `LLM Prompt:\n"Route this call optimally considering:\n- Technical complexity: OAuth/API (high)\n- Account tier: Enterprise (priority)\n- Previous contacts: 2 (frustrated)\n- Required skills: API, OAuth, enterprise\n\nAvailable agents with match score:\n→ Agent Kim: API specialist (0.94 match)\n→ Agent Tom: Tier 2 general (0.71 match)\n→ Agent Lee: Billing specialist (0.23 match)"` },
+            { from: 2, to: 1, label: 'routing decision', type: 'recv', narration: "LLM returns the optimal routing with reasoning.", payload: `{\n  "route_to": "agent_kim",\n  "confidence": 0.94,\n  "reasoning": "API integration specialist with OAuth expertise. Enterprise account warrants direct tier-2 routing to avoid repeat contact.",\n  "skip_queue": true,\n  "predicted_resolution": 0.87,\n  "estimated_handle_time": "8m"\n}` },
+            { from: 1, to: 2, label: 'context package', type: 'success', narration: "Agent receives a full context package before the call connects.", payload: `[Call routed to Agent Kim]\n[Pre-call brief delivered]\n{\n  "summary": "Enterprise customer, OAuth issue, 2nd contact",\n  "suggested_opening": "I see you've contacted us about an OAuth issue - I'm Kim, our API integration specialist",\n  "similar_cases": ["CASE-1234: OAuth token rotation fix"],\n  "documentation": "/kb/oauth-enterprise-guide"\n}` }
+          ],
+          outro: "LLM routing complete. Intelligent routing increases first-call resolution by 25-35% by matching customers to the exact right expert the first time. This is replacing static ACD skill-based routing across all major CCaaS platforms."
+        }
+      }
+    };
+
+    // ============================================================
+    // APP
+    // ============================================================
+    class CTIApp {
+      constructor() {
+        this.protocol = 'sip';
+        this.scenario = null;
+        this.voices = [];
+        this.voiceEnabled = false;
+        this.voiceRate = 0.95;
+        this.voicePitch = 1.0;
+        this.currentVoice = null;
+        this.speedMultiplier = 1;
+        this.running = false;
+
+        this.buildSidebar();
+        this.initTabs();
+        this.initControls();
+        this.initVoice();
+      }
+
+      buildSidebar() {
+        const protoList = document.getElementById('protocol-list');
+        protoList.innerHTML = '';
+        Object.entries(PROTOCOLS).forEach(([key, p]) => {
+          const btn = document.createElement('button');
+          btn.className = 'proto-btn' + (key === this.protocol ? ' active' : '');
+          btn.dataset.key = key;
+          btn.innerHTML = `<div class="proto-icon" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
+        <span>${p.label}</span>
+        <span class="proto-tag ${p.tagClass}">${p.tag}</span>`;
+          btn.onclick = () => this.selectProtocol(key);
+          protoList.appendChild(btn);
+        });
+        this.buildScenarios();
+      }
+
+      buildScenarios() {
+        const list = document.getElementById('scenario-list');
+        list.innerHTML = '';
+        const p = PROTOCOLS[this.protocol];
+        p.scenarios.forEach(s => {
+          const btn = document.createElement('button');
+          btn.className = 'scenario-btn';
+          btn.dataset.key = s;
+          const icon = SCENARIO_ICONS[s] || '▶';
+          btn.innerHTML = `<span class="scenario-icon">${icon}</span>${SCENARIO_LABELS[s] || s}`;
+          btn.onclick = () => this.selectScenario(s, btn);
+          list.appendChild(btn);
+        });
+      }
+
+      selectProtocol(key) {
+        this.protocol = key;
+        this.scenario = null;
+        document.querySelectorAll('.proto-btn').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+        this.buildScenarios();
+        this.showProtocolBanner();
+        this.clearDiagram();
+        document.getElementById('toolbar-label').textContent = `${PROTOCOLS[key].label} — select a scenario →`;
+      }
+
+      selectScenario(key, btn) {
+        this.scenario = key;
+        document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('toolbar-label').textContent = `${PROTOCOLS[this.protocol].label} › ${SCENARIO_LABELS[key]}`;
+        this.runScenario();
+      }
+
+      showProtocolBanner() {
+        const p = PROTOCOLS[this.protocol];
+        document.getElementById('proto-info-banner').innerHTML = `
+      <div class="proto-info-banner ${p.bannerClass}">
+        <h2>${p.icon} ${p.name}</h2>
+        <p>${p.desc}</p>
+        <div class="proto-tags">${p.pills.map(x => `<span class="proto-pill">${x}</span>`).join('')}</div>
+      </div>`;
+      }
+
+      clearDiagram() {
+        document.getElementById('seq-diagram').innerHTML = '';
+        document.getElementById('event-log').innerHTML = '';
+      }
+
+      initTabs() {
+        document.querySelectorAll('.panel-tab').forEach(t => {
+          t.onclick = () => {
+            document.querySelectorAll('.panel-tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.panel-section').forEach(x => x.classList.remove('visible'));
+            t.classList.add('active');
+            document.getElementById('tab-' + t.dataset.tab).classList.add('visible');
+          };
+        });
+      }
+
+      initControls() {
+        document.getElementById('btn-run').onclick = () => { if (this.scenario) this.runScenario(); };
+        document.getElementById('btn-reset').onclick = () => { this.clearDiagram(); this.showProtocolBanner(); };
+        document.getElementById('btn-clear').onclick = () => { this.clearDiagram(); document.getElementById('proto-info-banner').innerHTML = ''; };
+        document.getElementById('speed-slider').oninput = e => {
+          this.speedMultiplier = parseFloat(e.target.value);
+          document.getElementById('speed-val').textContent = this.speedMultiplier + 'x';
+        };
+      }
+
+      initVoice() {
+        const loadVoices = () => {
+          const vs = window.speechSynthesis.getVoices();
+          this.voices = vs;
+          const sel = document.getElementById('voice-select');
+          sel.innerHTML = '';
+          const eng = vs.filter(v => v.lang.startsWith('en'));
+          const show = eng.length ? eng : vs;
+          show.forEach((v, i) => {
+            const o = document.createElement('option');
+            o.value = i; o.textContent = `${v.name} (${v.lang})`; sel.appendChild(o);
+          });
+          if (show.length) this.currentVoice = show[0];
+        };
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) window.speechSynthesis.onvoiceschanged = loadVoices;
+
+        document.getElementById('voice-toggle').onclick = e => {
+          this.voiceEnabled = !this.voiceEnabled;
+          e.target.classList.toggle('on', this.voiceEnabled);
+        };
+        document.getElementById('voice-select').onchange = e => {
+          const eng = this.voices.filter(v => v.lang.startsWith('en'));
+          const show = eng.length ? eng : this.voices;
+          this.currentVoice = show[e.target.value] || this.voices[e.target.value];
+        };
+        document.getElementById('voice-rate').oninput = e => {
+          this.voiceRate = parseFloat(e.target.value);
+          document.getElementById('rate-display').textContent = this.voiceRate.toFixed(2) + 'x';
+        };
+        document.getElementById('voice-pitch').oninput = e => {
+          this.voicePitch = parseFloat(e.target.value);
+          document.getElementById('pitch-display').textContent = this.voicePitch.toFixed(1) + 'x';
+        };
+      }
+
+      async speak(text) {
+        if (!this.voiceEnabled || !text) return;
+        return new Promise(resolve => {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          if (this.currentVoice) u.voice = this.currentVoice;
+          u.rate = this.voiceRate; u.pitch = this.voicePitch;
+          document.getElementById('narration-box').textContent = text;
+          document.getElementById('narration-box').classList.add('speaking');
+          document.getElementById('speaking-pill').classList.add('on');
+          u.onend = u.onerror = () => {
+            document.getElementById('speaking-pill').classList.remove('on');
+            document.getElementById('narration-box').classList.remove('speaking');
+            resolve();
+          };
+          window.speechSynthesis.speak(u);
+        });
+      }
+
+      sleep(ms) { return new Promise(r => setTimeout(r, ms / this.speedMultiplier)); }
+
+      logEvent(msg, type = 'info') {
+        const log = document.getElementById('event-log');
+        const el = document.createElement('div');
+        el.className = `event-entry type-${type}`;
+        const t = new Date().toLocaleTimeString('en-US', { hour12: false });
+        el.innerHTML = `<span class="ev-time">[${t}]</span><span class="ev-msg"> ${msg}</span>`;
+        log.appendChild(el);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      showDetail(label, payload) {
+        const panel = document.getElementById('proto-detail');
+        panel.innerHTML = `<div class="code-title">📨 <span>${label}</span> payload</div><div class="code-block">${payload}</div>`;
+      }
+
+      async runScenario() {
+        if (this.running) return;
+        this.running = true;
+        this.clearDiagram();
+        this.showProtocolBanner();
+
+        const scenData = SCENARIOS[this.protocol]?.[this.scenario];
+        if (!scenData) {
+          this.logEvent('Scenario not found', 'error');
+          this.running = false; return;
+        }
+
+        const proto = PROTOCOLS[this.protocol];
+        const diag = document.getElementById('seq-diagram');
+
+        // Draw participants
+        const pRow = document.createElement('div');
+        pRow.className = 'participants-row';
+        scenData.participants.forEach(p => {
+          const box = document.createElement('div');
+          box.className = 'participant-box';
+          box.innerHTML = `<div class="participant-name">${p.name}</div><div class="participant-role">${p.role}</div>`;
+          pRow.appendChild(box);
+        });
+        diag.appendChild(pRow);
+
+        await this.sleep(200);
+
+        // Lifelines area
+        const llArea = document.createElement('div');
+        llArea.className = 'lifelines-area';
+        llArea.style.position = 'relative';
+        llArea.style.marginTop = '8px';
+        diag.appendChild(llArea);
+
+        // Compute participant center X positions
+        const diagRect = diag.getBoundingClientRect();
+        const pBoxes = pRow.querySelectorAll('.participant-box');
+
+        // Intro narration
+        this.logEvent(`▶ ${SCENARIO_LABELS[this.scenario]}`, 'info');
+        await this.speak(scenData.intro);
+
+        // Draw steps
+        for (let i = 0; i < scenData.steps.length; i++) {
+          const step = scenData.steps[i];
+          await this.sleep(180);
+
+          // Get current bounding boxes (DOM may have shifted)
+          const boxes = pRow.querySelectorAll('.participant-box');
+          const fromBox = boxes[step.from];
+          const toBox = boxes[step.to];
+          if (!fromBox || !toBox) continue;
+
+          const diagR = diag.getBoundingClientRect();
+          const fromR = fromBox.getBoundingClientRect();
+          const toR = toBox.getBoundingClientRect();
+
+          const fromCX = fromR.left - diagR.left + fromR.width / 2;
+          const toCX = toR.left - diagR.left + toR.width / 2;
+          const rowY = 8 + i * 58;
+          llArea.style.minHeight = (rowY + 60) + 'px';
+
+          // Lifelines
+          if (i === 0) {
+            boxes.forEach(b => {
+              const bR = b.getBoundingClientRect();
+              const cx = bR.left - diagR.left + bR.width / 2;
+              const ll = document.createElement('div');
+              ll.className = 'lifeline';
+              ll.style.cssText = `left:${cx}px;top:0;bottom:0;`;
+              llArea.appendChild(ll);
+            });
+          }
+
+          // Arrow
+          const msgDiv = document.createElement('div');
+          msgDiv.className = `msg-row msg-${this.protocol === 'ai_protocol' ? 'ai' : this.protocol}`;
+          msgDiv.style.cssText = `position:absolute;top:${rowY}px;left:0;right:0;`;
+
+          const goRight = toCX > fromCX;
+          const lineLeft = goRight ? fromCX : toCX;
+          const lineWidth = Math.abs(toCX - fromCX);
+          const midX = lineLeft + lineWidth / 2;
+
+          const line = document.createElement('div');
+          line.className = 'msg-line' + (goRight ? '' : ' reverse');
+          line.style.cssText = `left:${lineLeft}px;width:0;top:26px;`;
+
+          const arrowHead = document.createElement('div');
+          arrowHead.className = `msg-arrow-head ${goRight ? 'right' : 'left'}`;
+          arrowHead.style.cssText = `top:22px;${goRight ? 'right:' + lineLeft + 'px;opacity:0' : 'left:' + lineLeft + 'px;opacity:0'}`;
+
+          const lbl = document.createElement('div');
+          lbl.className = 'msg-label';
+          lbl.textContent = step.label;
+          lbl.style.cssText = `top:6px;left:${midX}px;transform:translateX(-50%);opacity:0;`;
+          if (step.payload) lbl.onclick = () => { this.showDetail(step.label, step.payload); document.getElementById('tab-detail').classList.add('visible'); document.querySelectorAll('.panel-section').forEach(x => { if (x.id !== 'tab-detail') x.classList.remove('visible') }); document.querySelectorAll('.panel-tab').forEach(t => { t.classList.toggle('active', t.dataset.tab === 'detail') }); };
+
+          const ts = document.createElement('span');
+          ts.className = 'msg-timestamp';
+          ts.textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
+          ts.style.cssText = `position:absolute;top:${rowY + 38}px;right:8px;`;
+
+          msgDiv.appendChild(line);
+          msgDiv.appendChild(arrowHead);
+          msgDiv.appendChild(lbl);
+          llArea.appendChild(msgDiv);
+          llArea.appendChild(ts);
+
+          // Animate
+          await this.sleep(50);
+          line.style.transition = `width ${280 / this.speedMultiplier}ms ease`;
+          line.style.width = lineWidth + 'px';
+          arrowHead.style.opacity = '1';
+          arrowHead.style[goRight ? 'right' : 'left'] = (goRight ? lineLeft - 8 : lineLeft - 8) + 'px';
+          if (goRight) { arrowHead.style.right = 'unset'; arrowHead.style.left = (lineLeft + lineWidth - 8) + 'px'; }
+          else { arrowHead.style.left = (lineLeft - 8) + 'px'; }
+          await this.sleep(120);
+          lbl.style.transition = 'opacity 0.2s'; lbl.style.opacity = '1';
+
+          // Log
+          const pNames = scenData.participants;
+          const typeMap = { send: 'send', recv: 'recv', info: 'info', success: 'success', error: 'error' };
+          this.logEvent(`${pNames[step.from].name} → ${pNames[step.to].name}: ${step.label}`, typeMap[step.type] || 'info');
+
+          // Narrate
+          if (step.narration) await this.speak(step.narration);
+          else await this.sleep(300);
+        }
+
+        // Outro
+        if (scenData.outro) {
+          await this.sleep(400);
+          this.logEvent(`✅ ${scenData.outro.substring(0, 80)}...`, 'success');
+          await this.speak(scenData.outro);
+        }
+
+        this.running = false;
+      }
+    }
+
+    // Init
+    window.onload = () => { window.app = new CTIApp(); };
+  </script>
+</body>
+
+</html>
